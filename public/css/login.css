@@ -1,34 +1,164 @@
-body.login #shadow_popup {
-    opacity: 1;
+/* 登录页面美化样式 */
+body.login {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background-attachment: fixed;
+    font-family: "Noto Sans", "Microsoft YaHei", "PingFang SC", "Hiragino Sans GB", sans-serif;
+    min-height: 100vh;
     display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 20px;
+    box-sizing: border-box;
+    overflow-x: hidden;
+}
+
+/* 背景动画效果 */
+body.login::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.2) 0%, transparent 50%);
+    animation: backgroundShift 20s ease-in-out infinite;
+    z-index: -1;
+}
+
+@keyframes backgroundShift {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    25% { transform: translate(-10px, -10px) scale(1.05); }
+    50% { transform: translate(10px, -5px) scale(1.02); }
+    75% { transform: translate(-5px, 10px) scale(1.03); }
+}
+
+body.login #shadow_popup {
+    opacity: 1 !important;
+    display: flex !important;
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    min-height: 400px;
+}
+
+body.login #dialogue_popup {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 24px;
+    box-shadow: 
+        0 25px 50px rgba(0, 0, 0, 0.15),
+        0 10px 20px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 50px;
+    width: 100%;
+    animation: slideInUp 0.6s ease-out;
+    min-height: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+body.login #dialogue_popup_holder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+body.login #dialogue_popup_text {
+    width: 100%;
+    max-width: 500px;
 }
 
 body.login .logo {
-    max-width: 30px;
+    max-width: 50px;
+    height: auto;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
 }
 
 body.login #logoBlock {
     align-items: center;
-    margin: 0 auto;
-    gap: 10px;
+    margin: 0 auto 40px auto;
+    gap: 20px;
+    text-align: center;
+    justify-content: center;
 }
 
+body.login #logoBlock span {
+    font-size: 28px;
+    font-weight: 600;
+    color: #2d3748;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+body.login h3 {
+    color: #4a5568;
+    font-size: 20px;
+    font-weight: 500;
+    margin: 25px 0;
+    text-align: center;
+}
+
+/* 用户选择样式 */
 body.login .userSelect {
     display: flex;
     flex-direction: column;
-    color: var(--SmartThemeBodyColor);
-    border: 1px solid var(--SmartThemeBorderColor);
-    border-radius: 5px;
-    padding: 3px 5px;
-    width: 30%;
+    color: #2d3748;
+    background: rgba(255, 255, 255, 0.8);
+    border: 2px solid rgba(102, 126, 234, 0.2);
+    border-radius: 16px;
+    padding: 25px;
+    width: 100%;
+    max-width: 400px;
     cursor: pointer;
-    margin: 5px 0;
-    transition: background-color 0.15s ease-in-out;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    margin: 15px auto;
+    transition: all 0.3s ease;
     text-align: center;
     overflow: hidden;
+    position: relative;
+    backdrop-filter: blur(10px);
+    min-height: 80px;
+    justify-content: center;
+}
+
+body.login .userSelect::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    transition: left 0.5s;
+}
+
+body.login .userSelect:hover::before {
+    left: 100%;
+}
+
+body.login .userSelect:hover {
+    background: rgba(255, 255, 255, 0.95);
+    border-color: rgba(102, 126, 234, 0.5);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(102, 126, 234, 0.25);
 }
 
 body.login .userSelect .userName,
@@ -37,14 +167,325 @@ body.login .userSelect .userHandle {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    font-weight: 500;
 }
 
-body.login .userSelect:hover {
-    background-color: var(--black30a);
+body.login .userSelect .userName {
+    font-size: 18px;
+    margin-bottom: 8px;
 }
 
+body.login .userSelect .userHandle {
+    font-size: 16px;
+    color: #718096;
+}
+
+/* 输入框样式 */
+body.login .text_pole {
+    background: rgba(255, 255, 255, 0.9);
+    border: 2px solid rgba(102, 126, 234, 0.2);
+    border-radius: 12px;
+    padding: 18px 24px;
+    font-size: 16px;
+    color: #2d3748;
+    width: 100%;
+    max-width: 400px;
+    margin: 15px auto;
+    transition: all 0.3s ease;
+    font-family: inherit;
+    backdrop-filter: blur(10px);
+    box-sizing: border-box;
+}
+
+body.login .text_pole:focus {
+    outline: none;
+    border-color: rgba(102, 126, 234, 0.6);
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+    transform: translateY(-2px);
+}
+
+body.login .text_pole::placeholder {
+    color: #a0aec0;
+    font-style: italic;
+}
+
+/* 按钮样式 */
+body.login .menu_button {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 18px 36px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    min-width: 140px;
+    margin: 15px 8px;
+    position: relative;
+    overflow: hidden;
+    font-family: inherit;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+body.login .menu_button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+body.login .menu_button:hover::before {
+    left: 100%;
+}
+
+body.login .menu_button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(102, 126, 234, 0.4);
+    background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+}
+
+body.login .menu_button:active {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+/* 链接样式 */
+body.login #recoverPassword {
+    color: #667eea;
+    text-decoration: none;
+    font-size: 14px;
+    margin: 15px 0;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    display: inline-block;
+}
+
+body.login #recoverPassword:hover {
+    color: #5a67d8;
+    text-decoration: underline;
+    transform: translateY(-1px);
+}
+
+/* 错误消息样式 */
+body.login .neutral_warning {
+    background: rgba(245, 101, 101, 0.1);
+    border: 1px solid rgba(245, 101, 101, 0.3);
+    border-radius: 10px;
+    padding: 15px 20px;
+    margin: 20px 0;
+    color: #e53e3e;
+    font-size: 14px;
+    text-align: center;
+    backdrop-filter: blur(10px);
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* 恢复消息样式 */
+body.login #recoverMessage {
+    background: rgba(72, 187, 120, 0.1);
+    border: 1px solid rgba(72, 187, 120, 0.3);
+    border-radius: 10px;
+    padding: 15px 20px;
+    margin: 20px 0;
+    color: #38a169;
+    font-size: 14px;
+    text-align: center;
+    backdrop-filter: blur(10px);
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* 用户列表容器 */
+body.login #userList {
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    margin: 25px 0;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* 按钮容器 */
+body.login .flex-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin: 20px 0;
+}
+
+body.login .flexGap10 {
+    gap: 15px;
+}
+
+/* 加载动画 */
+body.login .loading {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* 淡入动画 */
 body.login #handleEntryBlock,
 body.login #passwordEntryBlock,
 body.login #passwordRecoveryBlock {
-    margin: 2px;
+    margin: 15px 0;
+    animation: fadeIn 0.5s ease-out;
+    width: 100%;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 确保所有文本都使用中文字体 */
+body.login * {
+    font-family: "Noto Sans", "Microsoft YaHei", "PingFang SC", "Hiragino Sans GB", sans-serif;
+}
+
+/* PC端优化 */
+@media (min-width: 1024px) {
+    body.login #shadow_popup {
+        max-width: 700px;
+    }
+    
+    body.login #dialogue_popup {
+        padding: 60px;
+        border-radius: 28px;
+    }
+    
+    body.login #logoBlock span {
+        font-size: 32px;
+    }
+    
+    body.login h3 {
+        font-size: 22px;
+    }
+    
+    body.login .userSelect {
+        max-width: 450px;
+        padding: 30px;
+    }
+    
+    body.login .text_pole {
+        max-width: 450px;
+        padding: 20px 28px;
+        font-size: 16px;
+    }
+    
+    body.login .menu_button {
+        padding: 20px 40px;
+        font-size: 16px;
+        min-width: 160px;
+    }
+}
+
+/* 大屏幕优化 */
+@media (min-width: 1440px) {
+    body.login #shadow_popup {
+        max-width: 800px;
+    }
+    
+    body.login #dialogue_popup {
+        padding: 70px;
+    }
+    
+    body.login #logoBlock span {
+        font-size: 36px;
+    }
+    
+    body.login h3 {
+        font-size: 24px;
+    }
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    body.login {
+        padding: 10px;
+    }
+    
+    body.login #dialogue_popup {
+        padding: 30px 20px;
+        margin: 10px;
+        border-radius: 20px;
+    }
+    
+    body.login #logoBlock span {
+        font-size: 20px;
+    }
+    
+    body.login .userSelect {
+        max-width: 100%;
+        padding: 20px;
+    }
+    
+    body.login .text_pole {
+        max-width: 100%;
+        padding: 15px 20px;
+    }
+    
+    body.login .menu_button {
+        padding: 15px 25px;
+        font-size: 14px;
+        min-width: 120px;
+    }
+    
+    body.login #userList {
+        gap: 15px;
+    }
+}
+
+/* 超小屏幕优化 */
+@media (max-width: 480px) {
+    body.login #dialogue_popup {
+        padding: 25px 15px;
+        margin: 5px;
+        border-radius: 15px;
+    }
+    
+    body.login #logoBlock span {
+        font-size: 18px;
+    }
+    
+    body.login .menu_button {
+        padding: 12px 20px;
+        font-size: 14px;
+        min-width: 100px;
+    }
+    
+    body.login .text_pole {
+        padding: 12px 15px;
+        font-size: 14px;
+    }
 }
