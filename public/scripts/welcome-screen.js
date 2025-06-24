@@ -75,7 +75,57 @@ function sendAssistantMessage() {
     const message = {
         name: name,
         force_avatar: avatar,
-        mes: t`If you're connected to an API, try asking me something!` + '\n***\n' + t`**Hint:** Set any character as your welcome page assistant from their "More..." menu.`,
+        mes: `
+# <center>云酒馆公告</center>
+
+---
+
+> **本平台仅供个人合法合规使用，请勿使用本平台进行违法犯罪、低俗内容等对话**
+
+---
+
+### 酒馆使用教程、安卓app下载安装请看教程：
+
+酒馆使用教程（必看，不看你如果乱点大概率报错）：[https://docs.qq.com/doc/DTFVCdXV6UHBSWk1O](https://docs.qq.com/doc/DTFVCdXV6UHBSWk1O)  
+新注册的账号可直接选择角色卡开始聊天  
+欢迎加入酒馆交流群：  
+1044794284  
+进群答案：78600
+
+---
+
+**本酒馆配备数据备份功能，如发生聊天记录丢失，请在2天内到此恢复 -> [恢复链接](#)**
+
+---
+
+**购买云酒馆赠送的gemini秘钥：**
+
+自定义端点（基础 URL）：https://api.chr1.com/v1  
+自定义 API 密钥（注意sk-也要一起复制）：  
+sk-xxxxxxx
+
+---
+
+服务器在每天凌晨5点自动重启，届时会短暂掉线1分钟
+
+账号到期后保留15天，15天内没有续费会删除账号，云酒馆续费链接：[直达链接](#)
+
+---
+
+> **本店出售不限时api次数卡**
+
+可用模型：claude3.5、3.7、4.0opus，grok-3，gemini2.5pro等
+
+剩余次数查询：https://cx.chr1.com/
+
+倍率查询：https://docs.qq.com/doc/DTGREd2VKcUZMVUtD
+
+> **店铺链接：**
+
+[淘宝](#)
+[闲鱼](#)
+
+        `,
         is_system: false,
         is_user: false,
         extra: {

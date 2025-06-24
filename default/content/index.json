@@ -24,6 +24,10 @@
         "type": "theme"
     },
     {
+        "filename": "themes/Light_sky_4.3.json",
+        "type": "theme"
+    },
+    {
         "filename": "backgrounds/__transparent.png",
         "type": "background"
     },
@@ -483,8 +487,12 @@
         "filename": "presets/textgen/simple-proxy-for-tavern.json",
         "type": "textgen_preset"
     },
+        {
+            "filename": "presets/openai/Default.json",
+            "type": "openai_preset"
+        },
     {
-        "filename": "presets/openai/Default.json",
+        "filename": "presets/openai/【Dreammini】1.19-ultra-0613.json",
         "type": "openai_preset"
     },
     {
