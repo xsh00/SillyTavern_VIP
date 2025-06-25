@@ -12,8 +12,8 @@ const BG_METADATA_KEY = 'custom_background';
 const LIST_METADATA_KEY = 'chat_backgrounds';
 
 export let background_settings = {
-    name: '__transparent.png',
-    url: generateUrlParameter('__transparent.png', false),
+    name: 'oriental-moonlit-archway-and-landscape.jpg',
+    url: generateUrlParameter('oriental-moonlit-archway-and-landscape.jpg', false),
     fitting: 'classic',
 };
 

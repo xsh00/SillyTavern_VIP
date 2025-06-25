@@ -182,7 +182,7 @@ let power_user = {
     movingUIState: {},
     movingUIPreset: '',
     noShadows: false,
-    theme: 'Default (Dark) 1.7.1',
+    theme: 'Moonlit Echoes - by Rivelle (20250124)',
 
     gestures: true,
     auto_swipe: false,
@@ -1710,6 +1710,10 @@ async function loadPowerUserSettings(settings, data) {
         $('#movingUIPresets').append(option);
     }
 
+    // Apply the selected theme if it exists
+    if (power_user.theme && themes.some(t => t.name === power_user.theme)) {
+        applyTheme(power_user.theme);
+    }
 
     $(`#character_sort_order option[data-order="${power_user.sort_order}"][data-field="${power_user.sort_field}"]`).prop('selected', true);
     switchReducedMotion();

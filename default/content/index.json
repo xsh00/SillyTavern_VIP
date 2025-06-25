@@ -24,7 +24,7 @@
         "type": "theme"
     },
     {
-        "filename": "themes/Light_sky_4.3.json",
+        "filename": "themes/Moonlit Echoes - by Rivelle (20250124).json",
         "type": "theme"
     },
     {
@@ -109,6 +109,10 @@
     },
     {
         "filename": "backgrounds/landscape winter lake house.jpg",
+        "type": "background"
+    },
+    {
+        "filename": "backgrounds/oriental-moonlit-archway-and-landscape.jpg",
         "type": "background"
     },
     {
