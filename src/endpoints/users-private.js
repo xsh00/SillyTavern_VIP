@@ -38,6 +38,12 @@ router.get('/me', async (request, response) => {
         }
 
         const user = request.user.profile;
+        const now = Date.now();
+        const subscriptionExpires = user.subscriptionExpires || 0;
+        let daysRemaining = null;
+        if (subscriptionExpires > 0) {
+            daysRemaining = Math.max(0, Math.ceil((subscriptionExpires - now) / (1000 * 60 * 60 * 24)));
+        }
         const viewModel = {
             handle: user.handle,
             name: user.name,
@@ -45,6 +51,8 @@ router.get('/me', async (request, response) => {
             admin: user.admin,
             password: !!user.password,
             created: user.created,
+            subscriptionExpires: subscriptionExpires,
+            daysRemaining: daysRemaining
         };
 
         return response.json(viewModel);

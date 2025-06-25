@@ -52,6 +52,7 @@ const STORAGE_KEYS = {
  * @property {string} salt - Salt used for hashing the password
  * @property {boolean} enabled - Whether the user is enabled
  * @property {boolean} admin - Whether the user is an admin (can manage other users)
+ * @property {number} [subscriptionExpires] - The timestamp when the user's subscription expires (optional)
  */
 
 /**
@@ -879,6 +880,45 @@ export async function setUserDataMiddleware(request, response, next) {
 export function requireLoginMiddleware(request, response, next) {
     if (!request.user) {
         return response.sendStatus(403);
+    }
+
+    return next();
+}
+
+/**
+ * Middleware to check user subscription status.
+ * @param {import('express').Request} request Request object
+ * @param {import('express').Response} response Response object
+ * @param {import('express').NextFunction} next Next function
+ */
+export function requireValidSubscriptionMiddleware(request, response, next) {
+    if (!request.user) {
+        return response.sendStatus(403);
+    }
+
+    const user = request.user.profile;
+    
+    // 管理员不受订阅限制
+    if (user.admin) {
+        return next();
+    }
+
+    // 检查订阅状态
+    const now = Date.now();
+    const subscriptionExpires = user.subscriptionExpires || 0;
+    
+    if (subscriptionExpires <= 0) {
+        // 没有订阅，允许访问（可以根据需要修改）
+        return next();
+    }
+    
+    if (subscriptionExpires < now) {
+        // 订阅已过期
+        return response.status(403).json({ 
+            error: 'Subscription expired', 
+            message: '您的订阅已过期，请续费后继续使用。',
+            subscriptionExpires: subscriptionExpires 
+        });
     }
 
     return next();

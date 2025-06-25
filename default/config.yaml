@@ -98,7 +98,7 @@ rateLimiting:
   # Use X-Real-IP header instead of socket IP for rate limiting
   # Only enable this if you are using a properly configured reverse proxy (like Nginx/traefik/Caddy)
   preferRealIpHeader: false
-# -- ADVANCED CONFIGURATION --
+# -- ADANCED CONFIGURATION --
 # Open the browser automatically
 autorun: true
 # Avoids using 'localhost' for autorun in auto mode.
@@ -246,3 +246,7 @@ gemini:
 enableServerPlugins: false
 # Attempt to automatically update server plugins on startup
 enableServerPluginsAutoUpdate: true
+
+# -- SUBSCRIPTION CONFIGURATION --
+# 默认订阅时长（毫秒，30天）
+defaultSubscriptionDuration: 2592000000

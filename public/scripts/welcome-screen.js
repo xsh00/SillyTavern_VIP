@@ -66,7 +66,23 @@ export async function openWelcomeScreen() {
     sendWelcomePrompt();
 }
 
-function sendAssistantMessage() {
+async function sendAssistantMessage() {
+    let subInfo = '';
+    try {
+        const res = await fetch('/api/users/me');
+        if (res.ok) {
+            const user = await res.json();
+            if (user.subscriptionExpires && user.subscriptionExpires > 0) {
+                const days = user.daysRemaining;
+                const date = new Date(user.subscriptionExpires).toLocaleDateString('zh-CN');
+                subInfo = `\n> 🕒 <b>您的订阅剩余 <span style='color:#ffb300'>${days}</span> 天，到期日：<span style='color:#ffb300'>${date}</span></b>\n---\n`;
+            } else {
+                subInfo = `\n> 🕒 <b>当前账户无订阅限制</b>\n---\n`;
+            }
+        }
+    } catch (e) {
+        // ignore
+    }
     const currentAssistantAvatar = getPermanentAssistantAvatar();
     const character = characters.find(x => x.avatar === currentAssistantAvatar);
     const name = character ? character.name : neutralCharacterName;
@@ -75,7 +91,7 @@ function sendAssistantMessage() {
     const message = {
         name: name,
         force_avatar: avatar,
-        mes: `
+        mes: `${subInfo}
 # <center>云酒馆公告</center>
 
 ---

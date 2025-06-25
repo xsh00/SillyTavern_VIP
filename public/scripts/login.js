@@ -200,7 +200,7 @@ function redirectToHome() {
 function showRecoveryBlock() {
     $('#passwordEntryBlock').hide();
     $('#passwordRecoveryBlock').show();
-    displayError('');
+    $('#recoveryCode').focus();
 }
 
 /**
@@ -209,7 +209,135 @@ function showRecoveryBlock() {
 function onCancelRecoveryClick() {
     $('#passwordRecoveryBlock').hide();
     $('#passwordEntryBlock').show();
-    displayError('');
+    $('#recoveryCode').val('');
+    $('#newPassword').val('');
+}
+
+/**
+ * Shows the register block and hides other blocks.
+ */
+function showRegisterBlock() {
+    $('#passwordEntryBlock').hide();
+    $('#passwordRecoveryBlock').hide();
+    $('#renewBlock').hide();
+    $('#registerBlock').show();
+    $('#registerHandle').focus();
+}
+
+/**
+ * Shows the renew block and hides other blocks.
+ */
+function showRenewBlock() {
+    $('#passwordEntryBlock').hide();
+    $('#passwordRecoveryBlock').hide();
+    $('#registerBlock').hide();
+    $('#renewBlock').show();
+    $('#renewHandle').focus();
+}
+
+/**
+ * Hides the register block and shows the password entry block.
+ */
+function onCancelRegisterClick() {
+    $('#registerBlock').hide();
+    $('#passwordEntryBlock').show();
+    $('#registerHandle').val('');
+    $('#registerName').val('');
+    $('#registerPassword').val('');
+    $('#registerConfirmPassword').val('');
+    $('#registerInvitationCode').val('');
+}
+
+/**
+ * Hides the renew block and shows the password entry block.
+ */
+function onCancelRenewClick() {
+    $('#renewBlock').hide();
+    $('#passwordEntryBlock').show();
+    $('#renewHandle').val('');
+    $('#renewInvitationCode').val('');
+}
+
+/**
+ * Attempts to register a new user.
+ * @param {string} handle User's handle
+ * @param {string} name User's display name
+ * @param {string} password User's password
+ * @param {string} invitationCode Registration invitation code
+ * @returns {Promise<void>}
+ */
+async function performRegister(handle, name, password, invitationCode) {
+    const userInfo = {
+        handle: handle,
+        name: name,
+        password: password,
+        invitationCode: invitationCode,
+    };
+
+    try {
+        const response = await fetch('/api/users/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-Token': csrfToken,
+            },
+            body: JSON.stringify(userInfo),
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            return displayError(errorData.error || 'An error occurred');
+        }
+
+        const data = await response.json();
+        console.log(`Successfully registered user ${handle}!`);
+        displayError('');
+        onCancelRegisterClick();
+        // 注册成功后自动登录
+        await performLogin(handle, password);
+    } catch (error) {
+        console.error('Error registering user:', error);
+        displayError(String(error));
+    }
+}
+
+/**
+ * Attempts to renew user subscription.
+ * @param {string} handle User's handle
+ * @param {string} invitationCode Renewal invitation code
+ * @returns {Promise<void>}
+ */
+async function performRenew(handle, invitationCode) {
+    const userInfo = {
+        handle: handle,
+        invitationCode: invitationCode,
+    };
+
+    try {
+        const response = await fetch('/api/users/renew', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-Token': csrfToken,
+            },
+            body: JSON.stringify(userInfo),
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            return displayError(errorData.error || 'An error occurred');
+        }
+
+        const data = await response.json();
+        console.log(`Successfully renewed subscription for ${handle}!`);
+        displayError('');
+        onCancelRenewClick();
+        // 续费成功后显示成功消息
+        alert('续费成功！您的订阅已延长一个月。');
+    } catch (error) {
+        console.error('Error renewing subscription:', error);
+        displayError(String(error));
+    }
 }
 
 /**
@@ -275,10 +403,53 @@ function configureDiscreetLogin() {
     }
     document.getElementById('shadow_popup').style.opacity = '';
     $('#cancelRecovery').on('click', onCancelRecoveryClick);
+    
+    // 注册功能事件监听器
+    $('#registerButton').on('click', async () => {
+        const handle = String($('#registerHandle').val());
+        const name = String($('#registerName').val());
+        const password = String($('#registerPassword').val());
+        const confirmPassword = String($('#registerConfirmPassword').val());
+        const invitationCode = String($('#registerInvitationCode').val());
+
+        if (!handle || !name || !password || !invitationCode) {
+            displayError('请填写所有必填字段');
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            displayError('密码和确认密码不匹配');
+            return;
+        }
+
+        await performRegister(handle, name, password, invitationCode);
+    });
+
+    $('#cancelRegister').on('click', onCancelRegisterClick);
+
+    // 续费功能事件监听器
+    $('#renewButton').on('click', async () => {
+        const handle = String($('#renewHandle').val());
+        const invitationCode = String($('#renewInvitationCode').val());
+
+        if (!handle || !invitationCode) {
+            displayError('请填写所有必填字段');
+            return;
+        }
+
+        await performRenew(handle, invitationCode);
+    });
+
+    $('#cancelRenew').on('click', onCancelRenewClick);
+
     $(document).on('keydown', (evt) => {
         if (evt.key === 'Enter' && document.activeElement.tagName === 'INPUT') {
             if ($('#passwordRecoveryBlock').is(':visible')) {
                 $('#sendRecovery').trigger('click');
+            } else if ($('#registerBlock').is(':visible')) {
+                $('#registerButton').trigger('click');
+            } else if ($('#renewBlock').is(':visible')) {
+                $('#renewButton').trigger('click');
             } else {
                 $('#loginButton').trigger('click');
             }

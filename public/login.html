@@ -55,14 +55,35 @@
                                 class="flex-container flexFlowColumn alignItemsCenter">
                                 <input id="userPassword" class="text_pole" type="password" placeholder="密码" autocomplete="current-password">
                                 <div class="login-links">
-                                    <a id="registerLink" href="https://your-register-url.com" target="_blank">注册</a>
+                                    <a id="registerLink" href="#" onclick="showRegisterBlock(); return false;">注册</a>
                                     <a id="recoverPassword" href="#" onclick="return false;">忘记密码</a>
-                                    <a id="renewLink" href="https://your-renew-url.com" target="_blank">续费</a>
+                                    <a id="renewLink" href="#" onclick="showRenewBlock(); return false;">续费</a>
                                 </div>
                                 <div class="flex-container">
                                     <div id="loginButton" class="menu_button">
                                         <i class="fa fa-sign-in-alt" style="margin-right:8px;"></i>登录
                                     </div>
+                                </div>
+                            </div>
+                            <div id="registerBlock" style="display:none;" class="flex-container flexFlowColumn alignItemsCenter">
+                                <h3>用户注册</h3>
+                                <input id="registerHandle" class="text_pole" type="text" placeholder="用户名" autocomplete="username">
+                                <input id="registerName" class="text_pole" type="text" placeholder="显示名称">
+                                <input id="registerPassword" class="text_pole" type="password" placeholder="密码" autocomplete="new-password">
+                                <input id="registerConfirmPassword" class="text_pole" type="password" placeholder="确认密码" autocomplete="new-password">
+                                <input id="registerInvitationCode" class="text_pole" type="text" placeholder="注册邀请码">
+                                <div class="flex-container flexGap10">
+                                    <div id="registerButton" class="menu_button">注册</div>
+                                    <div id="cancelRegister" class="menu_button">取消</div>
+                                </div>
+                            </div>
+                            <div id="renewBlock" style="display:none;" class="flex-container flexFlowColumn alignItemsCenter">
+                                <h3>续费订阅</h3>
+                                <input id="renewHandle" class="text_pole" type="text" placeholder="用户名" autocomplete="username">
+                                <input id="renewInvitationCode" class="text_pole" type="text" placeholder="续费邀请码">
+                                <div class="flex-container flexGap10">
+                                    <div id="renewButton" class="menu_button">续费</div>
+                                    <div id="cancelRenew" class="menu_button">取消</div>
                                 </div>
                             </div>
                             <div id="passwordRecoveryBlock" style="display:none;" class="flex-container flexFlowColumn alignItemsCenter">

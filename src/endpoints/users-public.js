@@ -1,11 +1,28 @@
 import crypto from 'node:crypto';
+import lodash from 'lodash';
 
 import storage from 'node-persist';
 import express from 'express';
 import { RateLimiterMemory, RateLimiterRes } from 'rate-limiter-flexible';
 import { getIpFromRequest, getRealIpFromHeader } from '../express-common.js';
 import { color, Cache, getConfigValue } from '../util.js';
-import { KEY_PREFIX, getUserAvatar, toKey, getPasswordHash, getPasswordSalt } from '../users.js';
+import { 
+    KEY_PREFIX, 
+    getUserAvatar, 
+    toKey, 
+    getPasswordHash, 
+    getPasswordSalt,
+    getAllUserHandles,
+    ensurePublicDirectoriesExist,
+    getUserDirectories
+} from '../users.js';
+import { checkForNewContent, CONTENT_TYPES } from './content-manager.js';
+import { 
+    validateRegistrationCode, 
+    validateRenewalCode,
+    removeRegistrationCode,
+    removeRenewalCode
+} from '../invitation-codes.js';
 
 const DISCREET_LOGIN = getConfigValue('enableDiscreetLogin', false, 'boolean');
 const PREFER_REAL_IP_HEADER = getConfigValue('rateLimiting.preferRealIpHeader', false, 'boolean');
@@ -82,6 +99,21 @@ router.post('/login', async (request, response) => {
         if (user.password && user.password !== getPasswordHash(request.body.password, user.salt)) {
             console.warn('Login failed: Incorrect password for', user.handle);
             return response.status(403).json({ error: 'Incorrect credentials' });
+        }
+
+        // 检查订阅状态（管理员不受限制）
+        if (!user.admin) {
+            const now = Date.now();
+            const subscriptionExpires = user.subscriptionExpires || 0;
+            
+            if (subscriptionExpires > 0 && subscriptionExpires < now) {
+                console.warn('Login failed: Subscription expired for', user.handle);
+                return response.status(403).json({ 
+                    error: 'Subscription expired', 
+                    message: '您的订阅已过期，请续费后继续使用。',
+                    subscriptionExpires: subscriptionExpires 
+                });
+            }
         }
 
         if (!request.session) {
@@ -194,6 +226,165 @@ router.post('/recover-step2', async (request, response) => {
         }
 
         console.error('Recover step 2 failed:', error);
+        return response.sendStatus(500);
+    }
+});
+
+// 注册新用户
+router.post('/register', async (request, response) => {
+    try {
+        if (!request.body.handle || !request.body.name || !request.body.password || !request.body.invitationCode) {
+            console.warn('Register failed: Missing required fields');
+            return response.status(400).json({ error: 'Missing required fields' });
+        }
+
+        const ip = getIpAddress(request);
+        await loginLimiter.consume(ip);
+
+        // 验证邀请码
+        if (!validateRegistrationCode(request.body.invitationCode)) {
+            console.warn('Register failed: Invalid invitation code');
+            return response.status(403).json({ error: 'Invalid invitation code' });
+        }
+
+        const handles = await getAllUserHandles();
+        const handle = lodash.kebabCase(String(request.body.handle).toLowerCase().trim());
+
+        if (!handle) {
+            console.warn('Register failed: Invalid handle');
+            return response.status(400).json({ error: 'Invalid handle' });
+        }
+
+        if (handles.some(x => x === handle)) {
+            console.warn('Register failed: User with that handle already exists');
+            return response.status(409).json({ error: 'User already exists' });
+        }
+
+        const salt = getPasswordSalt();
+        const password = getPasswordHash(request.body.password, salt);
+        const defaultSubscriptionDuration = getConfigValue('defaultSubscriptionDuration', 2592000000, 'number');
+        const subscriptionExpires = Date.now() + defaultSubscriptionDuration;
+
+        const newUser = {
+            handle: handle,
+            name: request.body.name || 'Anonymous',
+            created: Date.now(),
+            password: password,
+            salt: salt,
+            admin: false,
+            enabled: true,
+            subscriptionExpires: subscriptionExpires,
+        };
+
+        await storage.setItem(toKey(handle), newUser);
+
+        // 注册成功后移除已用的邀请码
+        removeRegistrationCode(request.body.invitationCode);
+
+        // 创建用户目录
+        console.info('Creating data directories for', newUser.handle);
+        await ensurePublicDirectoriesExist();
+        const directories = getUserDirectories(newUser.handle);
+        await checkForNewContent([directories], [CONTENT_TYPES.SETTINGS]);
+
+        await loginLimiter.delete(ip);
+        console.info('Registration successful:', newUser.handle, 'from', ip, 'at', new Date().toLocaleString());
+        return response.json({ handle: newUser.handle, subscriptionExpires: newUser.subscriptionExpires });
+    } catch (error) {
+        if (error instanceof RateLimiterRes) {
+            console.error('Register failed: Rate limited from', getIpAddress(request));
+            return response.status(429).send({ error: 'Too many attempts. Try again later.' });
+        }
+
+        console.error('Register failed:', error);
+        return response.sendStatus(500);
+    }
+});
+
+// 续费用户订阅
+router.post('/renew', async (request, response) => {
+    try {
+        if (!request.body.handle || !request.body.invitationCode) {
+            console.warn('Renew failed: Missing required fields');
+            return response.status(400).json({ error: 'Missing required fields' });
+        }
+
+        const ip = getIpAddress(request);
+        await loginLimiter.consume(ip);
+
+        // 验证邀请码
+        if (!validateRenewalCode(request.body.invitationCode)) {
+            console.warn('Renew failed: Invalid invitation code');
+            return response.status(403).json({ error: 'Invalid invitation code' });
+        }
+
+        /** @type {import('../users.js').User} */
+        const user = await storage.getItem(toKey(request.body.handle));
+
+        if (!user) {
+            console.error('Renew failed: User', request.body.handle, 'not found');
+            return response.status(404).json({ error: 'User not found' });
+        }
+
+        if (!user.enabled) {
+            console.warn('Renew failed: User', user.handle, 'is disabled');
+            return response.status(403).json({ error: 'User is disabled' });
+        }
+
+        const defaultSubscriptionDuration = getConfigValue('defaultSubscriptionDuration', 2592000000, 'number');
+        const currentExpires = user.subscriptionExpires || 0;
+        const newExpires = Math.max(currentExpires, Date.now()) + defaultSubscriptionDuration;
+        
+        user.subscriptionExpires = newExpires;
+        await storage.setItem(toKey(request.body.handle), user);
+
+        // 续费成功后移除已用的邀请码
+        removeRenewalCode(request.body.invitationCode);
+
+        await loginLimiter.delete(ip);
+        console.info('Renewal successful:', user.handle, 'from', ip, 'at', new Date().toLocaleString());
+        return response.json({ handle: user.handle, subscriptionExpires: user.subscriptionExpires });
+    } catch (error) {
+        if (error instanceof RateLimiterRes) {
+            console.error('Renew failed: Rate limited from', getIpAddress(request));
+            return response.status(429).send({ error: 'Too many attempts. Try again later.' });
+        }
+
+        console.error('Renew failed:', error);
+        return response.sendStatus(500);
+    }
+});
+
+// 检查用户订阅状态
+router.post('/check-subscription', async (request, response) => {
+    try {
+        if (!request.body.handle) {
+            console.warn('Check subscription failed: Missing required fields');
+            return response.status(400).json({ error: 'Missing required fields' });
+        }
+
+        /** @type {import('../users.js').User} */
+        const user = await storage.getItem(toKey(request.body.handle));
+
+        if (!user) {
+            console.error('Check subscription failed: User', request.body.handle, 'not found');
+            return response.status(404).json({ error: 'User not found' });
+        }
+
+        const now = Date.now();
+        const subscriptionExpires = user.subscriptionExpires || 0;
+        const isExpired = subscriptionExpires < now;
+        const daysRemaining = Math.max(0, Math.ceil((subscriptionExpires - now) / (1000 * 60 * 60 * 24)));
+
+        return response.json({
+            handle: user.handle,
+            subscriptionExpires: subscriptionExpires,
+            isExpired: isExpired,
+            daysRemaining: daysRemaining,
+            hasSubscription: subscriptionExpires > 0
+        });
+    } catch (error) {
+        console.error('Check subscription failed:', error);
         return response.sendStatus(500);
     }
 });

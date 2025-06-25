@@ -16,6 +16,15 @@ import {
     ensurePublicDirectoriesExist,
 } from '../users.js';
 import { DEFAULT_USER } from '../constants.js';
+import {
+    getRegistrationCodes,
+    getRenewalCodes,
+    addRegistrationCode,
+    addRenewalCode,
+    removeRegistrationCode,
+    removeRenewalCode,
+    generateInvitationCode
+} from '../invitation-codes.js';
 
 export const router = express.Router();
 
@@ -246,6 +255,137 @@ router.post('/slugify', requireAdminMiddleware, async (request, response) => {
         return response.send(text);
     } catch (error) {
         console.error('Slugify failed:', error);
+        return response.sendStatus(500);
+    }
+});
+
+// 获取邀请码列表
+router.get('/invitation-codes', requireAdminMiddleware, async (request, response) => {
+    try {
+        const registrationCodes = getRegistrationCodes();
+        const renewalCodes = getRenewalCodes();
+        
+        return response.json({
+            registrationCodes: registrationCodes,
+            renewalCodes: renewalCodes
+        });
+    } catch (error) {
+        console.error('Get invitation codes failed:', error);
+        return response.sendStatus(500);
+    }
+});
+
+// 添加注册邀请码
+router.post('/invitation-codes/registration', requireAdminMiddleware, async (request, response) => {
+    try {
+        if (!request.body.code) {
+            console.warn('Add registration code failed: Missing code');
+            return response.status(400).json({ error: 'Missing code' });
+        }
+
+        const success = addRegistrationCode(request.body.code);
+        if (success) {
+            console.info('Registration code added:', request.body.code);
+            return response.json({ success: true, code: request.body.code });
+        } else {
+            return response.status(409).json({ error: 'Code already exists' });
+        }
+    } catch (error) {
+        console.error('Add registration code failed:', error);
+        return response.sendStatus(500);
+    }
+});
+
+// 添加续费邀请码
+router.post('/invitation-codes/renewal', requireAdminMiddleware, async (request, response) => {
+    try {
+        if (!request.body.code) {
+            console.warn('Add renewal code failed: Missing code');
+            return response.status(400).json({ error: 'Missing code' });
+        }
+
+        const success = addRenewalCode(request.body.code);
+        if (success) {
+            console.info('Renewal code added:', request.body.code);
+            return response.json({ success: true, code: request.body.code });
+        } else {
+            return response.status(409).json({ error: 'Code already exists' });
+        }
+    } catch (error) {
+        console.error('Add renewal code failed:', error);
+        return response.sendStatus(500);
+    }
+});
+
+// 删除注册邀请码
+router.delete('/invitation-codes/registration/:code', requireAdminMiddleware, async (request, response) => {
+    try {
+        const code = request.params.code;
+        const success = removeRegistrationCode(code);
+        
+        if (success) {
+            console.info('Registration code removed:', code);
+            return response.json({ success: true, code: code });
+        } else {
+            return response.status(404).json({ error: 'Code not found' });
+        }
+    } catch (error) {
+        console.error('Remove registration code failed:', error);
+        return response.sendStatus(500);
+    }
+});
+
+// 删除续费邀请码
+router.delete('/invitation-codes/renewal/:code', requireAdminMiddleware, async (request, response) => {
+    try {
+        const code = request.params.code;
+        const success = removeRenewalCode(code);
+        
+        if (success) {
+            console.info('Renewal code removed:', code);
+            return response.json({ success: true, code: code });
+        } else {
+            return response.status(404).json({ error: 'Code not found' });
+        }
+    } catch (error) {
+        console.error('Remove renewal code failed:', error);
+        return response.sendStatus(500);
+    }
+});
+
+// 生成随机邀请码
+router.post('/invitation-codes/generate', requireAdminMiddleware, async (request, response) => {
+    try {
+        const type = request.body.type; // 'registration' 或 'renewal'
+        const prefix = request.body.prefix || 'CODE';
+        
+        if (!type || (type !== 'registration' && type !== 'renewal')) {
+            return response.status(400).json({ error: 'Invalid type. Must be "registration" or "renewal"' });
+        }
+
+        const code = generateInvitationCode(prefix);
+        
+        // 自动添加到对应列表
+        let success = false;
+        if (type === 'registration') {
+            success = addRegistrationCode(code);
+        } else {
+            success = addRenewalCode(code);
+        }
+
+        if (success) {
+            console.info(`${type} code generated and added:`, code);
+            return response.json({ 
+                success: true, 
+                code: code, 
+                type: type,
+                message: `Generated and added ${type} code`
+            });
+        } else {
+            return response.status(500).json({ error: 'Failed to add generated code' });
+        }
+    } catch (error) {
+        console.error('Generate invitation code failed:', error);
         return response.sendStatus(500);
     }
 });

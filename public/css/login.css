@@ -82,42 +82,162 @@ body.login h3 {
 
 body.login .text_pole {
     width: 100%;
-    padding: 12px 14px;
+    max-width: 300px;
+    padding: 12px 16px;
     margin: 8px 0;
+    border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 8px;
-    border: none;
-    background: rgba(255,255,255,0.12);
+    background: rgba(255, 255, 255, 0.1);
     color: #fff;
-    font-size: 1rem;
-    outline: none;
-    transition: background 0.2s;
-    margin-bottom: 4px;
+    font-size: 14px;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
 }
+
 body.login .text_pole:focus {
-    background: rgba(255,255,255,0.22);
+    outline: none;
+    border-color: rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+}
+
+body.login .text_pole::placeholder {
+    color: rgba(255, 255, 255, 0.6);
 }
 
 body.login .menu_button {
-    width: 100px;
-    height: 28px;
-    padding: 0;
-    margin-top: 12px;
-    border-radius: 6px;
-    background: #b39ddb;
-    color: #fff;
-    font-size: 1.15rem;
-    font-weight: bold;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 12px 24px;
     border: none;
+    border-radius: 8px;
     cursor: pointer;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
-    transition: background 0.2s, transform 0.2s;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    margin: 8px 4px;
+    min-width: 100px;
+    text-align: center;
 }
+
 body.login .menu_button:hover {
-    background: #9575cd;
-    transform: translateY(-2px) scale(1.03);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+}
+
+body.login .menu_button:active {
+    transform: translateY(0);
+}
+
+body.login .login-links {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 300px;
+    margin: 12px 0;
+}
+
+body.login .login-links a {
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    font-size: 13px;
+    transition: color 0.3s ease;
+}
+
+body.login .login-links a:hover {
+    color: #fff;
+    text-decoration: underline;
+}
+
+body.login .neutral_warning {
+    color: #ff6b6b;
+    font-size: 13px;
+    text-align: center;
+    margin: 8px 0;
+    min-height: 20px;
+}
+
+/* 注册和续费界面样式 */
+body.login #registerBlock,
+body.login #renewBlock {
+    width: 100%;
+    max-width: 350px;
+}
+
+body.login #registerBlock h3,
+body.login #renewBlock h3 {
+    margin: 0 0 20px 0;
+    font-size: 1.3rem;
+    font-weight: 500;
+    color: #fff;
+    text-align: center;
+}
+
+body.login .flexGap10 {
+    gap: 10px;
+}
+
+body.login .flexGap10 .menu_button {
+    flex: 1;
+    min-width: 80px;
+}
+
+/* 用户选择样式 */
+body.login .userSelect {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    padding: 16px;
+    margin: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    min-width: 120px;
+    text-align: center;
+}
+
+body.login .userSelect:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+body.login .userSelect .avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin: 0 auto 8px auto;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+body.login .userSelect .avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+body.login .userSelect .userName {
+    display: block;
+    font-weight: 500;
+    color: #fff;
+    margin-bottom: 4px;
+}
+
+body.login .userSelect .userHandle {
+    display: block;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 12px;
+}
+
+body.login #handleEntryBlock,
+body.login #passwordEntryBlock,
+body.login #passwordRecoveryBlock {
+    margin: 2px;
+}
+
+body.login #passwordEntryBlock {
+    margin-bottom: 4px;
 }
 
 body.login a#recoverPassword {
@@ -134,72 +254,4 @@ body.login a#recoverPassword {
 }
 body.login a#recoverPassword:hover {
     color: #ede7f6;
-}
-
-body.login .neutral_warning {
-    color: #ffbaba;
-    margin-top: 10px;
-    min-height: 20px;
-    text-align: center;
-}
-
-body.login .userSelect {
-    display: flex;
-    flex-direction: column;
-    color: var(--SmartThemeBodyColor);
-    border: 1px solid var(--SmartThemeBorderColor);
-    border-radius: 5px;
-    padding: 3px 5px;
-    width: 30%;
-    cursor: pointer;
-    margin: 5px 0;
-    transition: background-color 0.15s ease-in-out;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    overflow: hidden;
-}
-
-body.login .userSelect .userName,
-body.login .userSelect .userHandle {
-    width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-body.login .userSelect:hover {
-    background-color: var(--black30a);
-}
-
-body.login #handleEntryBlock,
-body.login #passwordEntryBlock,
-body.login #passwordRecoveryBlock {
-    margin: 2px;
-}
-
-body.login #passwordEntryBlock {
-    margin-bottom: 4px;
-}
-
-.login-links {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    gap: 28px;
-    margin: 8px 0 0 0;
-}
-.login-links a {
-    color: #fff;
-    text-decoration: none;
-    font-size: 0.98rem;
-    font-weight: 500;
-    transition: color 0.2s;
-    padding: 0 2px;
-}
-.login-links a:hover {
-    color: #b39ddb;
-    text-decoration: underline;
 }
