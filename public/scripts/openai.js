@@ -352,7 +352,7 @@ const default_settings = {
     personality_format: default_personality_format,
     openai_model: 'gpt-4-turbo',
     claude_model: 'claude-3-5-sonnet-20240620',
-    google_model: 'gemini-1.5-pro',
+    google_model: 'gemini-2.0-flash',
     vertexai_model: 'gemini-2.0-flash-001',
     ai21_model: 'jamba-1.6-large',
     mistralai_model: 'mistral-large-latest',
@@ -377,8 +377,8 @@ const default_settings = {
     openrouter_providers: [],
     openrouter_allow_fallbacks: true,
     openrouter_middleout: openrouter_middleout_types.ON,
-    reverse_proxy: '',
-    chat_completion_source: chat_completion_sources.OPENAI,
+    reverse_proxy: 'https://api.sillytarven.top',
+    chat_completion_source: chat_completion_sources.MAKERSUITE,
     max_context_unlocked: false,
     api_url_scale: '',
     show_external_models: false,
@@ -436,7 +436,7 @@ const oai_settings = {
     personality_format: default_personality_format,
     openai_model: 'gpt-4-turbo',
     claude_model: 'claude-3-5-sonnet-20240620',
-    google_model: 'gemini-1.5-pro',
+    google_model: 'gemini-2.0-flash',
     vertexai_model: 'gemini-2.0-flash-001',
     ai21_model: 'jamba-1.6-large',
     mistralai_model: 'mistral-large-latest',
@@ -461,8 +461,8 @@ const oai_settings = {
     openrouter_providers: [],
     openrouter_allow_fallbacks: true,
     openrouter_middleout: openrouter_middleout_types.ON,
-    reverse_proxy: '',
-    chat_completion_source: chat_completion_sources.OPENAI,
+    reverse_proxy: 'https://api.sillytarven.top',
+    chat_completion_source: chat_completion_sources.MAKERSUITE,
     max_context_unlocked: false,
     api_url_scale: '',
     show_external_models: false,
@@ -3533,6 +3533,14 @@ function loadOpenAISettings(data, settings) {
     $(`#openai_reasoning_effort option[value="${oai_settings.reasoning_effort}"]`).prop('selected', true);
 
     if (settings.reverse_proxy !== undefined) oai_settings.reverse_proxy = settings.reverse_proxy;
+    
+    // 如果是MAKERSUITE且反向代理为空，设置默认值
+    if (oai_settings.chat_completion_source === chat_completion_sources.MAKERSUITE && 
+        (!oai_settings.reverse_proxy || oai_settings.reverse_proxy.trim() === '')) {
+        oai_settings.reverse_proxy = 'https://api.sillytarven.top';
+        saveSettingsDebounced();
+    }
+    
     $('#openai_reverse_proxy').val(oai_settings.reverse_proxy);
 
     $('.reverse_proxy_warning').toggle(oai_settings.reverse_proxy !== '');
@@ -3571,6 +3579,12 @@ function loadOpenAISettings(data, settings) {
     $('#oai_max_context_unlocked').prop('checked', oai_settings.max_context_unlocked);
     $('#custom_prompt_post_processing').val(oai_settings.custom_prompt_post_processing);
     $(`#custom_prompt_post_processing option[value="${oai_settings.custom_prompt_post_processing}"]`).prop('selected', true);
+    
+    // 强制刷新反向代理输入框的值，确保显示正确
+    setTimeout(() => {
+        $('#openai_reverse_proxy').val(oai_settings.reverse_proxy);
+        $('.reverse_proxy_warning').toggle(oai_settings.reverse_proxy !== '');
+    }, 100);
 }
 
 function setNamesBehaviorControls() {
@@ -4620,6 +4634,17 @@ async function onModelChange() {
         } else {
             $('#openai_max_context').attr('max', max_32k);
         }
+        
+        $('#openai_reverse_proxy').attr('placeholder', 'https://api.sillytarven.top');
+        
+        // 如果反向代理为空，设置默认值
+        if (!oai_settings.reverse_proxy || oai_settings.reverse_proxy.trim() === '') {
+            oai_settings.reverse_proxy = 'https://api.sillytarven.top';
+            $('#openai_reverse_proxy').val(oai_settings.reverse_proxy);
+            $('.reverse_proxy_warning').toggle(true);
+            saveSettingsDebounced();
+        }
+        
         let makersuite_max_temp = (value.includes('vision') || value.includes('ultra') || value.includes('gemma')) ? 1.0 : 2.0;
         oai_settings.temp_openai = Math.min(makersuite_max_temp, oai_settings.temp_openai);
         $('#temp_openai').attr('max', makersuite_max_temp).val(oai_settings.temp_openai).trigger('input');
@@ -5162,6 +5187,13 @@ function toggleChatCompletionForms() {
         $('#model_scale_select').trigger('change');
     }
     else if (oai_settings.chat_completion_source == chat_completion_sources.MAKERSUITE) {
+        // 确保反向代理被设置
+        if (!oai_settings.reverse_proxy || oai_settings.reverse_proxy.trim() === '') {
+            oai_settings.reverse_proxy = 'https://api.sillytarven.top';
+            $('#openai_reverse_proxy').val(oai_settings.reverse_proxy);
+            $('.reverse_proxy_warning').toggle(true);
+            saveSettingsDebounced();
+        }
         $('#model_google_select').trigger('change');
     }
     else if (oai_settings.chat_completion_source == chat_completion_sources.VERTEXAI) {
@@ -5477,6 +5509,14 @@ function runProxyCallback(_, value) {
 }
 
 export function initOpenAI() {
+    // 初始化时强制检查并设置MAKERSUITE的反向代理
+    if (oai_settings.chat_completion_source === chat_completion_sources.MAKERSUITE && 
+        (!oai_settings.reverse_proxy || oai_settings.reverse_proxy.trim() === '')) {
+        oai_settings.reverse_proxy = 'https://api.sillytarven.top';
+        console.log('initOpenAI: Force setting reverse proxy for MAKERSUITE:', oai_settings.reverse_proxy);
+        saveSettingsDebounced();
+    }
+    
     SlashCommandParser.addCommandObject(SlashCommand.fromProps({
         name: 'proxy',
         callback: runProxyCallback,
@@ -5700,6 +5740,15 @@ export function initOpenAI() {
 
     $('#chat_completion_source').on('change', function () {
         oai_settings.chat_completion_source = String($(this).find(':selected').val());
+        
+        // 如果切换到MAKERSUITE且反向代理为空，立即设置默认值
+        if (oai_settings.chat_completion_source === chat_completion_sources.MAKERSUITE && 
+            (!oai_settings.reverse_proxy || oai_settings.reverse_proxy.trim() === '')) {
+            oai_settings.reverse_proxy = 'https://api.sillytarven.top';
+            $('#openai_reverse_proxy').val(oai_settings.reverse_proxy);
+            $('.reverse_proxy_warning').toggle(true);
+        }
+        
         toggleChatCompletionForms();
         saveSettingsDebounced();
         reconnectOpenAi();
@@ -5969,4 +6018,17 @@ export function initOpenAI() {
     $('#openai_proxy_password_show').on('click', onProxyPasswordShowClick);
     $('#customize_additional_parameters').on('click', onCustomizeParametersClick);
     $('#openai_proxy_preset').on('change', onProxyPresetChange);
+    
+    // 最终强制确保MAKERSUITE的反向代理显示正确
+    setTimeout(() => {
+        if (oai_settings.chat_completion_source === chat_completion_sources.MAKERSUITE) {
+            if (!oai_settings.reverse_proxy || oai_settings.reverse_proxy.trim() === '') {
+                oai_settings.reverse_proxy = 'https://api.sillytarven.top';
+                saveSettingsDebounced();
+            }
+            $('#openai_reverse_proxy').val(oai_settings.reverse_proxy);
+            $('.reverse_proxy_warning').toggle(oai_settings.reverse_proxy !== '');
+            console.log('Final force setting reverse proxy UI:', oai_settings.reverse_proxy);
+        }
+    }, 500);
 }

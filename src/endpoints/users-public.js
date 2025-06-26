@@ -17,6 +17,7 @@ import {
     getUserDirectories
 } from '../users.js';
 import { checkForNewContent, CONTENT_TYPES } from './content-manager.js';
+
 import { 
     validateRegistrationCode, 
     validateRenewalCode,
@@ -286,6 +287,10 @@ router.post('/register', async (request, response) => {
         await ensurePublicDirectoriesExist();
         const directories = getUserDirectories(newUser.handle);
         await checkForNewContent([directories], [CONTENT_TYPES.SETTINGS]);
+
+        // 设置默认的Google AI Studio API密钥（如果不使用反向代理的话，这里可以设置默认密钥）
+        // 由于使用反向代理，所以不需要设置API密钥
+        console.info('Created user directories for', newUser.handle, 'with default Google AI Studio configuration');
 
         await loginLimiter.delete(ip);
         console.info('Registration successful:', newUser.handle, 'from', ip, 'at', new Date().toLocaleString());

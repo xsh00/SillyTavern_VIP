@@ -1,4 +1,5 @@
 registrationCodes:
+  - REGISTER-CODE-1
   - REGISTER-CODE-2
   - REGISTER-CODE-3
   - REGISTER-CODE-4
@@ -6,3 +7,6 @@ registrationCodes:
 renewalCodes:
   - RENEW-CODE-2
   - RENEW-CODE-3
+  - RENEW-CODE-4
+  - RENEW-CODE-5
+  - RENEW-CODE-6

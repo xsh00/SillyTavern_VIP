@@ -4,6 +4,7 @@ import storage from 'node-persist';
 import express from 'express';
 import lodash from 'lodash';
 import { checkForNewContent, CONTENT_TYPES } from './content-manager.js';
+
 import {
     KEY_PREFIX,
     toKey,
@@ -204,6 +205,11 @@ router.post('/create', requireAdminMiddleware, async (request, response) => {
         await ensurePublicDirectoriesExist();
         const directories = getUserDirectories(newUser.handle);
         await checkForNewContent([directories], [CONTENT_TYPES.SETTINGS]);
+        
+        // 设置默认的Google AI Studio API密钥（如果不使用反向代理的话，这里可以设置默认密钥）
+        // 由于使用反向代理，所以不需要设置API密钥
+        console.info('Created user directories for', newUser.handle, 'with default Google AI Studio configuration');
+        
         return response.json({ handle: newUser.handle });
     } catch (error) {
         console.error('User create failed:', error);

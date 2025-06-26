@@ -626,13 +626,14 @@
         "ai21_model": "jamba-1.5-large",
         "windowai_model": "",
         "openrouter_model": "OR_Website",
-        "reverse_proxy": "",
-        "chat_completion_source": "openai",
+        "reverse_proxy": "https://api.sillytarven.top",
+        "chat_completion_source": "makersuite",
         "max_context_unlocked": false,
         "api_url_scale": "",
         "show_external_models": false,
         "proxy_password": "",
         "assistant_prefill": "",
-        "assistant_impersonation": ""
+        "assistant_impersonation": "",
+        "custom_url": ""
     }
 }
