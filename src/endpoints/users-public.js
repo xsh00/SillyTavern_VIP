@@ -279,8 +279,8 @@ router.post('/register', async (request, response) => {
 
         await storage.setItem(toKey(handle), newUser);
 
-        // 注册成功后移除已用的邀请码
-        removeRegistrationCode(request.body.invitationCode);
+        // 注册成功后移除已用的邀请码，并记录使用情况
+        removeRegistrationCode(request.body.invitationCode, newUser.handle, ip);
 
         // 创建用户目录
         console.info('Creating data directories for', newUser.handle);
@@ -343,8 +343,8 @@ router.post('/renew', async (request, response) => {
         user.subscriptionExpires = newExpires;
         await storage.setItem(toKey(request.body.handle), user);
 
-        // 续费成功后移除已用的邀请码
-        removeRenewalCode(request.body.invitationCode);
+        // 续费成功后移除已用的邀请码，并记录使用情况
+        removeRenewalCode(request.body.invitationCode, user.handle, ip);
 
         await loginLimiter.delete(ip);
         console.info('Renewal successful:', user.handle, 'from', ip, 'at', new Date().toLocaleString());

@@ -221,6 +221,15 @@ app.get('/callback/:source?', (request, response) => {
 // Host login page
 app.get('/login', loginPageMiddleware);
 
+// Host code management page (admin only)
+app.get('/codemanage', requireLoginMiddleware, (request, response) => {
+    // Check if user is admin
+    if (!request.user || !request.user.profile || !request.user.profile.admin) {
+        return response.status(403).sendFile(path.join(serverDirectory, 'public/error/forbidden-by-whitelist.html'));
+    }
+    return response.sendFile(path.join(serverDirectory, 'public/codemanage.html'));
+});
+
 // Host frontend assets
 const webpackMiddleware = getWebpackServeMiddleware();
 app.use(webpackMiddleware);

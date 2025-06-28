@@ -24,7 +24,8 @@ import {
     addRenewalCode,
     removeRegistrationCode,
     removeRenewalCode,
-    generateInvitationCode
+    generateInvitationCode,
+    getUsageStatistics
 } from '../invitation-codes.js';
 
 export const router = express.Router();
@@ -392,6 +393,17 @@ router.post('/invitation-codes/generate', requireAdminMiddleware, async (request
         }
     } catch (error) {
         console.error('Generate invitation code failed:', error);
+        return response.sendStatus(500);
+    }
+});
+
+// 获取邀请码使用统计
+router.get('/invitation-codes/statistics', requireAdminMiddleware, async (request, response) => {
+    try {
+        const statistics = getUsageStatistics();
+        return response.json(statistics);
+    } catch (error) {
+        console.error('Get invitation codes statistics failed:', error);
         return response.sendStatus(500);
     }
 });

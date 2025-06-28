@@ -797,8 +797,9 @@ async function getClientVersion() {
             displayVersion += ` '${data.gitBranch}' (${data.gitRevision})`;
         }
 
-        $('#version_display').text(displayVersion);
-        $('#version_display_welcome').text(displayVersion);
+        // Version display removed
+        // $('#version_display').text(displayVersion);
+        // $('#version_display_welcome').text(displayVersion);
     } catch (err) {
         console.error('Couldn\'t get client version', err);
     }

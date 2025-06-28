@@ -255,3 +255,186 @@ body.login a#recoverPassword {
 body.login a#recoverPassword:hover {
     color: #ede7f6;
 }
+
+/* 移动端优化样式 */
+@media screen and (max-width: 768px) {
+    body.login #shadow_popup {
+        padding: 10px;
+        min-height: 100vh;
+        min-height: 100dvh;
+    }
+
+    body.login #dialogue_popup {
+        padding: 20px 16px 16px 16px;
+        margin: 0;
+        max-width: calc(100vw - 20px);
+        max-width: calc(100dvw - 20px);
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    body.login #logoBlock {
+        margin: 0 auto 12px auto;
+        font-size: 1.4rem;
+    }
+
+    body.login #logoBlock span {
+        font-size: 1.8rem;
+    }
+
+    body.login .text_pole {
+        max-width: 100%;
+        width: 100%;
+        margin: 6px 0;
+        padding: 10px 12px;
+        box-sizing: border-box;
+    }
+
+    body.login .login-links {
+        max-width: 100%;
+        width: 100%;
+        margin: 10px 0;
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: center;
+    }
+
+    body.login .login-links a {
+        font-size: 12px;
+    }
+
+    body.login .menu_button {
+        padding: 10px 20px;
+        margin: 6px 2px;
+        font-size: 13px;
+        min-width: 80px;
+    }
+
+    body.login .flexGap10 {
+        gap: 8px;
+        flex-direction: column;
+    }
+
+    body.login .flexGap10 .menu_button {
+        width: 100%;
+        max-width: 200px;
+    }
+
+    body.login #registerBlock,
+    body.login #renewBlock {
+        max-width: 100%;
+        width: 100%;
+    }
+
+    body.login #registerBlock h3,
+    body.login #renewBlock h3 {
+        font-size: 1.2rem;
+        margin: 0 0 16px 0;
+    }
+
+    body.login .userSelect {
+        margin: 4px;
+        padding: 12px;
+        min-width: 100px;
+    }
+
+    body.login #userList {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+    }
+}
+
+/* 小屏幕手机优化 */
+@media screen and (max-width: 480px) {
+    body.login #dialogue_popup {
+        padding: 16px 12px 12px 12px;
+        max-width: calc(100vw - 10px);
+        max-width: calc(100dvw - 10px);
+    }
+
+    body.login #shadow_popup {
+        padding: 5px;
+    }
+
+    body.login #logoBlock {
+        font-size: 1.2rem;
+        margin: 0 auto 10px auto;
+    }
+
+    body.login #logoBlock span {
+        font-size: 1.6rem;
+    }
+
+    body.login .logo {
+        max-width: 30px;
+        margin-right: 15px;
+    }
+
+    body.login .text_pole {
+        margin: 5px 0;
+        padding: 8px 10px;
+        font-size: 13px;
+    }
+
+    body.login .menu_button {
+        padding: 8px 16px;
+        font-size: 12px;
+        margin: 4px 2px;
+    }
+
+    body.login .login-links a {
+        font-size: 11px;
+    }
+
+    body.login h3 {
+        font-size: 1rem;
+        margin: 0 0 12px 0;
+    }
+
+    body.login #registerBlock h3,
+    body.login #renewBlock h3 {
+        font-size: 1.1rem;
+    }
+
+    body.login .userSelect {
+        margin: 3px;
+        padding: 10px;
+        min-width: 90px;
+    }
+
+    body.login .userSelect .userName {
+        font-size: 13px;
+    }
+
+    body.login .userSelect .userHandle {
+        font-size: 11px;
+    }
+}
+
+/* 超小屏幕优化 */
+@media screen and (max-width: 360px) {
+    body.login #dialogue_popup {
+        padding: 12px 8px 8px 8px;
+        max-width: calc(100vw - 6px);
+        max-width: calc(100dvw - 6px);
+    }
+
+    body.login #shadow_popup {
+        padding: 3px;
+    }
+
+    body.login .flexGap10 {
+        gap: 6px;
+    }
+
+    body.login .text_pole {
+        padding: 6px 8px;
+        margin: 4px 0;
+    }
+
+    body.login .menu_button {
+        padding: 6px 12px;
+        min-width: 70px;
+    }
+}

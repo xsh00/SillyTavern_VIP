@@ -92,54 +92,74 @@ async function sendAssistantMessage() {
         name: name,
         force_avatar: avatar,
         mes: `${subInfo}
-# <center>云酒馆公告</center>
+<div align="center">
+<h1 style="color: #4a90e2; font-size: 28px; margin-bottom: 20px;">
+🌟 云酒馆公告 🌟
+</h1>
+</div>
 
 ---
 
-> **本平台仅供个人合法合规使用，请勿使用本平台进行违法犯罪、低俗内容等对话**
+<div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 15px; border-radius: 10px; margin: 15px 0;">
+<p style="color: white; font-weight: bold; font-size: 16px; text-align: center; margin: 0;">
+⚠️ 本平台仅供个人合法合规使用，请勿使用本平台进行违法犯罪、低俗内容等对话 ⚠️
+</p>
+</div>
 
 ---
 
-### 酒馆使用教程、安卓app下载安装请看教程：
+<div style="background: #f8f9fa; padding: 20px; border-radius: 8px; border-left: 4px solid #28a745;">
+<h3 style="color: #28a745; margin-top: 0;">📚 酒馆使用教程</h3>
 
-酒馆使用教程（必看，不看你如果乱点大概率报错）：[https://docs.qq.com/doc/DTFVCdXV6UHBSWk1O](https://docs.qq.com/doc/DTFVCdXV6UHBSWk1O)  
-新注册的账号可直接选择角色卡开始聊天  
-欢迎加入酒馆交流群：  
-1044794284  
-进群答案：78600
+<p style="font-size: 16px; line-height: 1.6;">
+<strong style="color: #dc3545;">📖 使用教程（必看）：</strong><br>
+<a href="https://docs.qq.com/doc/DTFVCdXV6UHBSWk1O" target="_blank" style="color: #007bff; text-decoration: none; font-weight: bold;">
+🔗 https://docs.qq.com/doc/DTFVCdXV6UHBSWk1O
+</a>
+</p>
 
----
+<p style="font-size: 14px; color: #6c757d;">
+💡 <em>新注册的账号可直接选择角色卡开始聊天</em>
+</p>
 
-**本酒馆配备数据备份功能，如发生聊天记录丢失，请在2天内到此恢复 -> [恢复链接](#)**
-
----
-
-**购买云酒馆赠送的gemini秘钥：**
-
-自定义端点（基础 URL）：https://api.chr1.com/v1  
-自定义 API 密钥（注意sk-也要一起复制）：  
-sk-xxxxxxx
-
----
-
-服务器在每天凌晨5点自动重启，届时会短暂掉线1分钟
-
-账号到期后保留15天，15天内没有续费会删除账号，云酒馆续费链接：[直达链接](#)
+<p style="font-size: 16px;">
+<strong style="color: #17a2b8;">🛠️ 客服联系VX：</strong><span style="color: #28a745; font-weight: bold;">jiuguan3678</span>
+</p>
+</div>
 
 ---
 
-> **本店出售不限时api次数卡**
+<div style="background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); padding: 20px; border-radius: 8px; margin: 15px 0;">
+<h3 style="color: #d63384; text-align: center; margin-top: 0;">💎 精品API次数卡</h3>
 
-可用模型：claude3.5、3.7、4.0opus，grok-3，gemini2.5pro等
+<div style="background: rgba(255,255,255,0.8); padding: 15px; border-radius: 6px; margin: 10px 0;">
+<p style="font-size: 16px; font-weight: bold; color: #495057; margin-bottom: 8px;">
+🤖 <span style="color: #e83e8c;">支持模型：</span>
+</p>
+<p style="font-size: 14px; color: #6f42c1; line-height: 1.5;">
+Claude 3.5 | Claude 3.7 | Claude 4.0 Opus<br>
+Grok-3 | Gemini 2.5 Pro 等高级模型
+</p>
+</div>
 
-剩余次数查询：https://cx.chr1.com/
+<div style="text-align: center; margin-top: 15px;">
+<p style="font-size: 18px; font-weight: bold; color: #dc3545; margin-bottom: 10px;">
+🛒 购买渠道
+</p>
+<a href="#" style="display: inline-block; background: #ff6b6b; color: white; padding: 8px 20px; margin: 5px; border-radius: 20px; text-decoration: none; font-weight: bold;">
+🛍️ 淘宝店铺
+</a>
+<a href="#" style="display: inline-block; background: #4ecdc4; color: white; padding: 8px 20px; margin: 5px; border-radius: 20px; text-decoration: none; font-weight: bold;">
+🐠 闲鱼店铺
+</a>
+</div>
+</div>
 
-倍率查询：https://docs.qq.com/doc/DTGREd2VKcUZMVUtD
-
-> **店铺链接：**
-
-[淘宝](#)
-[闲鱼](#)
+<div style="background: #e3f2fd; padding: 15px; border-radius: 8px; border: 1px solid #bbdefb; margin-top: 20px;">
+<p style="color: #1565c0; font-size: 14px; text-align: center; margin: 0;">
+💝 <strong>感谢您的使用，祝您聊天愉快！</strong> 💝
+</p>
+</div>
 
         `,
         is_system: false,
@@ -174,7 +194,6 @@ async function sendWelcomePanel(chats) {
         const templateData = {
             chats,
             empty: !chats.length,
-            version: displayVersion,
             more: chats.some(chat => chat.hidden),
         };
         const template = await renderTemplateAsync('welcomePanel', templateData);

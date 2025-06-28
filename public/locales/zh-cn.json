@@ -2128,5 +2128,15 @@
 	"Sort By: Date (Oldest First)": "排序: 日期（从最远到最新）",
 	"Sort By: Date (Newest First)": "排序: 日期（从最新到最远）",
 	"Set the reasoning block of a message. Returns the reasoning block content.": "设置消息的推理块。返回推理块内容。",
-	"Select providers. No selection = all providers.": "选择服务商。未选择 = 所有服务商。"
+	"Select providers. No selection = all providers.": "选择服务商。未选择 = 所有服务商。",
+	"Recent Chats": "最近聊天",
+	"Temporary Chat": "临时聊天",
+	"Show recent chats": "显示最近聊天",
+	"Hide recent chats": "隐藏最近聊天",
+	"No recent chats": "暂无最近聊天",
+	"Assistant not found. Try sending a chat message.": "未找到助手。请尝试发送聊天消息。",
+	"is a system assistant. Choose another character.": "是系统助手。请选择其他角色。",
+	"is no longer your assistant.": "不再是您的助手。",
+	"Set ${character.name} as your assistant.": "将 ${character.name} 设为您的助手。",
+	"Failed to open permanent assistant chat. See console for details.": "无法打开永久助手聊天。详情请查看控制台。"
 }
