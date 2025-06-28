@@ -11424,6 +11424,75 @@ jQuery(async function () {
 
     //////////////////////////////////////////////////////////////
 
+    // 新的设置按钮功能
+    function initMainSettingsButton() {
+        const settingsButton = document.getElementById('mainSettingsIcon');
+        const dropdown = document.getElementById('main-settings-dropdown');
+        
+        // 点击设置按钮显示/隐藏下拉菜单
+        settingsButton.addEventListener('click', function(e) {
+            e.stopPropagation();
+            dropdown.classList.toggle('show');
+            if (dropdown.style.display === 'none' || dropdown.style.display === '') {
+                dropdown.style.display = 'block';
+            } else {
+                dropdown.style.display = 'none';
+            }
+        });
+        
+        // 点击下拉菜单项
+        const dropdownItems = dropdown.querySelectorAll('.dropdown-item');
+        dropdownItems.forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const targetId = this.getAttribute('data-target');
+                const targetElement = document.getElementById(targetId);
+                
+                if (targetElement) {
+                    // 显示目标抽屉
+                    targetElement.style.display = 'block';
+                    
+                    // 触发原始的抽屉打开逻辑
+                    const drawerToggle = targetElement.querySelector('.drawer-toggle');
+                    if (drawerToggle) {
+                        drawerToggle.click();
+                    }
+                    
+                    // 监听抽屉关闭事件，当抽屉关闭时重新隐藏元素
+                    const drawerContent = targetElement.querySelector('.drawer-content');
+                    if (drawerContent) {
+                        const observer = new MutationObserver(function(mutations) {
+                            mutations.forEach(function(mutation) {
+                                if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                                    if (drawerContent.classList.contains('closedDrawer')) {
+                                        targetElement.style.display = 'none';
+                                        observer.disconnect();
+                                    }
+                                }
+                            });
+                        });
+                        observer.observe(drawerContent, { attributes: true, attributeFilter: ['class'] });
+                    }
+                }
+                
+                // 隐藏下拉菜单
+                dropdown.style.display = 'none';
+                dropdown.classList.remove('show');
+            });
+        });
+        
+        // 点击页面其他地方隐藏下拉菜单
+        document.addEventListener('click', function(e) {
+            if (!settingsButton.contains(e.target) && !dropdown.contains(e.target)) {
+                dropdown.style.display = 'none';
+                dropdown.classList.remove('show');
+            }
+        });
+    }
+    
+    // 初始化设置按钮
+    initMainSettingsButton();
+
     $('#select_chat_cross').click(function () {
         $('#shadow_select_chat_popup').transition({
             opacity: 0,

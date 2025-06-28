@@ -1,0 +1,124 @@
+/* SillyTavern 角色管理界面简化样式 */
+
+/* 隐藏第一排不需要的按钮，只保留导入角色 */
+#rm_button_create,
+#external_import_button,
+#rm_button_group_chats {
+    display: none !important;
+}
+
+/* 隐藏第二排的所有按钮 */
+#rm_print_characters_pagination {
+    display: none !important;
+}
+
+/* 隐藏标签控制区域（第二排按钮：show only favorites等） */
+.rm_tag_controls {
+    display: none !important;
+}
+
+/* 创建一个折叠按钮容器 */
+.character-advanced-controls {
+    margin-bottom: 10px;
+    border: 1px solid #444;
+    border-radius: 5px;
+    background-color: #2a2a2a;
+}
+
+.character-advanced-toggle {
+    background-color: #3a3a3a;
+    border: none;
+    color: #fff;
+    padding: 8px 12px;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+    border-radius: 5px 5px 0 0;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.character-advanced-toggle:hover {
+    background-color: #4a4a4a;
+}
+
+.character-advanced-toggle .toggle-icon {
+    transition: transform 0.3s ease;
+}
+
+.character-advanced-toggle.collapsed .toggle-icon {
+    transform: rotate(-90deg);
+}
+
+.character-advanced-content {
+    padding: 10px;
+    display: none;
+    background-color: #2a2a2a;
+    border-radius: 0 0 5px 5px;
+}
+
+.character-advanced-content.show {
+    display: block;
+}
+
+/* 在折叠区域内恢复隐藏的按钮显示 */
+.character-advanced-content #rm_button_create,
+.character-advanced-content #external_import_button,
+.character-advanced-content #rm_button_group_chats,
+.character-advanced-content #rm_print_characters_pagination {
+    display: inline-block !important;
+}
+
+/* 折叠区域内按钮的样式调整 */
+.character-advanced-content .menu_button {
+    margin: 3px;
+}
+
+/* 为导入按钮添加一些强调样式 */
+#character_import_button {
+    background-color: #0066cc !important;
+    color: white !important;
+    border: 1px solid #0066cc !important;
+    font-weight: bold;
+}
+
+#character_import_button:hover {
+    background-color: #0080ff !important;
+    border-color: #0080ff !important;
+}
+
+/* 确保原始网格视图样式正常工作 */
+/* SillyTavern原始样式在toggle-dependent.css中已定义 */
+/* 这里只需要确保不干扰原始实现 */
+
+/* 简化搜索栏周围的间距 */
+#form_character_search_form {
+    gap: 5px;
+    align-items: center;
+}
+
+/* 标签控制区域的简化 */
+.rm_tag_controls {
+    margin: 5px 0;
+}
+
+/* 高级功能区域内的标签控制样式 */
+.advanced-tag-controls {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #555;
+}
+
+.advanced-tag-controls label {
+    color: #ccc;
+    font-size: 12px;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.advanced-tag-area .rm_tag_controls {
+    display: block !important;
+    margin: 0;
+} 
