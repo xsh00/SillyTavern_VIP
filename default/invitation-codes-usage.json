@@ -1,0 +1,10 @@
+[
+  {
+    "code": "REGISTER-test1",
+    "type": "registration",
+    "userHandle": "test-1",
+    "ip": "127.0.0.1",
+    "timestamp": 1751188175001,
+    "date": "2025-06-29"
+  }
+]

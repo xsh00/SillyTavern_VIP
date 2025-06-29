@@ -4014,8 +4014,14 @@ input[type="checkbox"]::before {
     clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
 }
 
+input[type="checkbox"]:checked {
+    background-color: #4A90E2;
+    border-color: #4A90E2;
+}
+
 input[type="checkbox"]:checked::before {
     transform: scale(1);
+    box-shadow: inset 1em 1em #000000;
 }
 
 input[type="checkbox"]:disabled {

@@ -28,109 +28,142 @@
         "type": "theme"
     },
     {
-        "filename": "backgrounds/__transparent.png",
+        "filename": "backgrounds/透明.png",
         "type": "background"
     },
     {
-        "filename": "backgrounds/_black.jpg",
+        "filename": "backgrounds/纯黑色.jpg",
         "type": "background"
     },
     {
-        "filename": "backgrounds/_white.jpg",
+        "filename": "backgrounds/纯白色.jpg",
         "type": "background"
     },
     {
-        "filename": "backgrounds/bedroom clean.jpg",
+        "filename": "backgrounds/卧室_干净.jpg",
         "type": "background"
     },
     {
-        "filename": "backgrounds/bedroom cyberpunk.jpg",
+        "filename": "backgrounds/卧室_赛博朋克.jpg",
         "type": "background"
     },
     {
-        "filename": "backgrounds/bedroom red.jpg",
+        "filename": "backgrounds/卧室_红色.jpg",
         "type": "background"
     },
     {
-        "filename": "backgrounds/bedroom tatami.jpg",
+        "filename": "backgrounds/卧室_榻榻米.jpg",
         "type": "background"
     },
     {
-        "filename": "backgrounds/cityscape medieval market.jpg",
+        "filename": "backgrounds/城市风光_中世纪市场.jpg",
         "type": "background"
     },
     {
-        "filename": "backgrounds/cityscape medieval night.jpg",
+        "filename": "backgrounds/城市风光_中世纪夜晚.jpg",
         "type": "background"
     },
     {
-        "filename": "backgrounds/cityscape postapoc.jpg",
+        "filename": "backgrounds/城市风光_后启示录.jpg",
         "type": "background"
     },
     {
-        "filename": "backgrounds/forest treehouse fireworks air baloons (by kallmeflocc).jpg",
+        "filename": "backgrounds/森林_树屋烟花气球.jpg",
         "type": "background"
     },
     {
-        "filename": "backgrounds/japan classroom side.jpg",
+        "filename": "backgrounds/日本_教室侧面.jpg",
         "type": "background"
     },
     {
-        "filename": "backgrounds/japan classroom.jpg",
+        "filename": "backgrounds/日本_教室.jpg",
         "type": "background"
     },
     {
-        "filename": "backgrounds/japan path cherry blossom.jpg",
+        "filename": "backgrounds/日本_樱花小径.jpg",
         "type": "background"
     },
     {
-        "filename": "backgrounds/japan university.jpg",
+        "filename": "backgrounds/日本_大学.jpg",
         "type": "background"
     },
     {
-        "filename": "backgrounds/landscape autumn great tree.jpg",
+        "filename": "backgrounds/风景_秋日大树.jpg",
         "type": "background"
     },
     {
-        "filename": "backgrounds/landscape beach day.png",
+        "filename": "backgrounds/风景_海滩白天.png",
         "type": "background"
     },
     {
-        "filename": "backgrounds/landscape beach night.jpg",
+        "filename": "backgrounds/风景_海滩夜晚.jpg",
         "type": "background"
     },
     {
-        "filename": "backgrounds/landscape mountain lake.jpg",
+        "filename": "backgrounds/风景_山湖.jpg",
         "type": "background"
     },
     {
-        "filename": "backgrounds/landscape postapoc.jpg",
+        "filename": "backgrounds/风景_后启示录.jpg",
         "type": "background"
     },
     {
-        "filename": "backgrounds/landscape winter lake house.jpg",
+        "filename": "backgrounds/风景_冬日湖边小屋.jpg",
         "type": "background"
     },
     {
-        "filename": "backgrounds/oriental-moonlit-archway-and-landscape.jpg",
+        "filename": "backgrounds/东方_月下拱门风景.jpg",
         "type": "background"
     },
     {
-        "filename": "backgrounds/royal.jpg",
+        "filename": "backgrounds/皇室.jpg",
         "type": "background"
     },
     {
-        "filename": "backgrounds/tavern day.jpg",
+        "filename": "backgrounds/酒馆_白天.jpg",
         "type": "background"
     },
     {
-        "filename": "default_Seraphina.png",
+        "filename": "woc平时奶膘小猫竟然是个超强S爽哥？！.png",
         "type": "character"
     },
     {
-        "filename": "Seraphina",
-        "type": "sprites"
+        "filename": "人生模拟器，我进入了诡异修仙界.png",
+        "type": "character"
     },
+    {
+        "filename": "偶遇七年前不告而别的初恋，该不该咬死？.png",
+        "type": "character"
+    },
+    {
+        "filename": "星辰为冢.png",
+        "type": "character"
+    },
+    {
+        "filename": "流浪猫 鲁.png",
+        "type": "character"
+    },
+    {
+        "filename": "电竞战队助理日常.png",
+        "type": "character"
+    },
+    {
+        "filename": "精灵宝可梦-旅途.png",
+        "type": "character"
+    },
+    {
+        "filename": "芒狗台综艺《变形记》新一季开播啦！.png",
+        "type": "character"
+    },
+    {
+        "filename": "连环杀手如此甜蜜.png",
+        "type": "character"
+    },
+    {
+        "filename": "金庸群侠传之武林高手.png",
+        "type": "character"
+    },
+
     {
         "filename": "Eldoria.json",
         "type": "world"
@@ -496,7 +529,15 @@
             "type": "openai_preset"
         },
     {
-        "filename": "presets/openai/【Dreammini】1.19-ultra-0613.json",
+        "filename": "presets/openai/kemini 4.5 flash.json",
+        "type": "openai_preset"
+    },
+    {
+        "filename": "presets/openai/【Dreammini】1.4-ultra-0627.json",
+        "type": "openai_preset"
+    },
+    {
+        "filename": "presets/openai/Gemini! It's MyGO!!!!! 栞 1.5.0 正式版.json",
         "type": "openai_preset"
     },
     {

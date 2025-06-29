@@ -332,7 +332,7 @@ const default_settings = {
     min_p_openai: 0,
     top_a_openai: 0,
     repetition_penalty_openai: 1,
-    stream_openai: false,
+    stream_openai: true,
     openai_max_context: max_4k,
     openai_max_tokens: 300,
     wrap_in_quotes: false,
@@ -416,7 +416,7 @@ const oai_settings = {
     min_p_openai: 0,
     top_a_openai: 0,
     repetition_penalty_openai: 1,
-    stream_openai: false,
+    stream_openai: true,
     openai_max_context: max_4k,
     openai_max_tokens: 300,
     wrap_in_quotes: false,
@@ -6031,4 +6031,41 @@ export function initOpenAI() {
             console.log('Final force setting reverse proxy UI:', oai_settings.reverse_proxy);
         }
     }, 500);
+    
+    // 自动连接API功能 - 多种事件监听确保自动连接
+    function attemptAutoConnect() {
+        // 检查是否需要自动连接（用户已登录且API源已配置）
+        if (main_api === 'openai' && oai_settings.chat_completion_source) {
+            console.log('Auto-connecting to API...', {
+                main_api: main_api,
+                chat_completion_source: oai_settings.chat_completion_source,
+                reverse_proxy: oai_settings.reverse_proxy
+            });
+            setTimeout(() => {
+                $('#api_button_openai').trigger('click');
+            }, 100);
+            return true;
+        }
+        return false;
+    }
+
+    // 监听设置加载完成事件
+    eventSource.on(event_types.SETTINGS_LOADED_AFTER, () => {
+        setTimeout(attemptAutoConnect, 500);
+    });
+
+    // 监听聊天补全源变更事件
+    eventSource.on(event_types.CHATCOMPLETION_SOURCE_CHANGED, () => {
+        setTimeout(attemptAutoConnect, 300);
+    });
+
+    // 备选方案：延迟自动连接
+    setTimeout(() => {
+        if (!attemptAutoConnect()) {
+            console.log('Auto-connect conditions not met:', {
+                main_api: main_api,
+                chat_completion_source: oai_settings.chat_completion_source
+            });
+        }
+    }, 2000);
 }

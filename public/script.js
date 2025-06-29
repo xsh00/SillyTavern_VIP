@@ -679,7 +679,7 @@ const SAFETY_CHAT = [
         is_system: true,
         is_user: false,
         create_date: 0,
-        mes: 'You deleted a character/chat and arrived back here for safety reasons! Pick another character!',
+        mes: '您已删除角色/聊天记录，为了安全起见返回到此页面！请选择另一个角色！',
     },
 ];
 
