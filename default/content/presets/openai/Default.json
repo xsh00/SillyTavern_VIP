@@ -1,5 +1,5 @@
 {
-    "chat_completion_source": "makersuite",
+    "chat_completion_source": "custom",
     "openai_model": "gpt-4-turbo",
     "claude_model": "claude-3-5-sonnet-20240620",
     "windowai_model": "",
@@ -9,8 +9,8 @@
     "openrouter_sort_models": "alphabetically",
     "ai21_model": "jamba-1.5-large",
     "mistralai_model": "mistral-large-latest",
-    "custom_model": "",
-    "custom_url": "",
+    "custom_model": "gemini-2.5-flash",
+    "custom_url": "https://api.sillytarven.top/v1",
     "custom_include_body": "",
     "custom_exclude_body": "",
     "custom_include_headers": "",

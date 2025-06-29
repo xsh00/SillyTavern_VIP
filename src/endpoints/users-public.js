@@ -24,6 +24,7 @@ import {
     removeRegistrationCode,
     removeRenewalCode
 } from '../invitation-codes.js';
+import { writeSecret } from './secrets.js';
 
 const DISCREET_LOGIN = getConfigValue('enableDiscreetLogin', false, 'boolean');
 const PREFER_REAL_IP_HEADER = getConfigValue('rateLimiting.preferRealIpHeader', false, 'boolean');
@@ -288,9 +289,10 @@ router.post('/register', async (request, response) => {
         const directories = getUserDirectories(newUser.handle);
         await checkForNewContent([directories], [CONTENT_TYPES.SETTINGS]);
 
-        // 设置默认的Google AI Studio API密钥（如果不使用反向代理的话，这里可以设置默认密钥）
-        // 由于使用反向代理，所以不需要设置API密钥
-        console.info('Created user directories for', newUser.handle, 'with default Google AI Studio configuration');
+        // 设置默认的自定义 API 密钥
+        const { writeSecret } = await import('./secrets.js');
+        writeSecret(directories, 'api_key_custom', 'sk-ocsltHKgbHTkrcsu9VIe0qCUBbeUWhadscjmf0LE7KSKpdec');
+        console.info('Created user directories for', newUser.handle, 'with default custom API configuration');
 
         await loginLimiter.delete(ip);
         console.info('Registration successful:', newUser.handle, 'from', ip, 'at', new Date().toLocaleString());

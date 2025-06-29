@@ -627,13 +627,14 @@
         "windowai_model": "",
         "openrouter_model": "OR_Website",
         "reverse_proxy": "https://api.sillytarven.top",
-        "chat_completion_source": "makersuite",
+        "chat_completion_source": "custom",
         "max_context_unlocked": false,
         "api_url_scale": "",
         "show_external_models": false,
         "proxy_password": "",
         "assistant_prefill": "",
         "assistant_impersonation": "",
-        "custom_url": ""
+        "custom_url": "https://api.sillytarven.top/v1",
+        "custom_model": "gemini-2.5-flash"
     }
 }
