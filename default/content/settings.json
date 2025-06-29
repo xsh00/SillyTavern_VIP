@@ -195,7 +195,7 @@
         "enableLabMode": false,
         "enableZenSliders": false,
         "ui_mode": 1,
-        "forbid_external_media": true,
+        "forbid_external_media": false,
         "stscript": {
             "parser": {
                 "flags": {
@@ -488,8 +488,8 @@
         "top_p_openai": 1,
         "top_k_openai": 0,
         "stream_openai": true,
-        "openai_max_context": 4095,
-        "openai_max_tokens": 300,
+        "openai_max_context": 100000,
+        "openai_max_tokens": 65500,
         "wrap_in_quotes": false,
         "prompts": [
             {
