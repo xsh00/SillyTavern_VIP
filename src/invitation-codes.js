@@ -16,17 +16,18 @@ function readInvitationCodes() {
             // 如果文件不存在，创建默认配置
             const defaultConfig = {
                 registrationCodes: [],
-                renewalCodes: []
+                renewalCodes: [],
+                trialCodes: []
             };
             writeInvitationCodes(defaultConfig);
             return defaultConfig;
         }
 
         const content = fs.readFileSync(INVITATION_CODES_FILE, 'utf8');
-        return yaml.load(content) || { registrationCodes: [], renewalCodes: [] };
+        return yaml.load(content) || { registrationCodes: [], renewalCodes: [], trialCodes: [] };
     } catch (error) {
         console.error('读取邀请码配置文件失败:', error.message);
-        return { registrationCodes: [], renewalCodes: [] };
+        return { registrationCodes: [], renewalCodes: [], trialCodes: [] };
     }
 }
 
@@ -81,7 +82,7 @@ function writeUsageLog(usageLog) {
 /**
  * 记录邀请码使用情况
  * @param {string} code 邀请码
- * @param {string} type 类型 ('registration' 或 'renewal')
+ * @param {string} type 类型 ('registration' 或 'renewal' 或 'trial')
  * @param {string} userHandle 用户名
  * @param {string} ip 用户IP
  */
@@ -120,15 +121,19 @@ export function getUsageStatistics() {
         
         // 按日期统计
         const dailyStats = {};
-        const typeStats = { registration: 0, renewal: 0 };
+        const typeStats = { registration: 0, renewal: 0, trial: 0 };
         
         usageLog.forEach(record => {
             const date = record.date;
             if (!dailyStats[date]) {
-                dailyStats[date] = { registration: 0, renewal: 0 };
+                dailyStats[date] = { registration: 0, renewal: 0, trial: 0 };
             }
-            dailyStats[date][record.type]++;
-            typeStats[record.type]++;
+            if (dailyStats[date][record.type] !== undefined) {
+                dailyStats[date][record.type]++;
+            }
+            if (typeStats[record.type] !== undefined) {
+                typeStats[record.type]++;
+            }
         });
         
         // 获取最近7天的统计
@@ -139,7 +144,8 @@ export function getUsageStatistics() {
                 date: date,
                 registration: dailyStats[date]?.registration || 0,
                 renewal: dailyStats[date]?.renewal || 0,
-                total: (dailyStats[date]?.registration || 0) + (dailyStats[date]?.renewal || 0)
+                trial: dailyStats[date]?.trial || 0,
+                total: (dailyStats[date]?.registration || 0) + (dailyStats[date]?.renewal || 0) + (dailyStats[date]?.trial || 0)
             });
         }
         
@@ -147,28 +153,31 @@ export function getUsageStatistics() {
             today: {
                 registration: dailyStats[today]?.registration || 0,
                 renewal: dailyStats[today]?.renewal || 0,
-                total: (dailyStats[today]?.registration || 0) + (dailyStats[today]?.renewal || 0)
+                trial: dailyStats[today]?.trial || 0,
+                total: (dailyStats[today]?.registration || 0) + (dailyStats[today]?.renewal || 0) + (dailyStats[today]?.trial || 0)
             },
             yesterday: {
                 registration: dailyStats[yesterday]?.registration || 0,
                 renewal: dailyStats[yesterday]?.renewal || 0,
-                total: (dailyStats[yesterday]?.registration || 0) + (dailyStats[yesterday]?.renewal || 0)
+                trial: dailyStats[yesterday]?.trial || 0,
+                total: (dailyStats[yesterday]?.registration || 0) + (dailyStats[yesterday]?.renewal || 0) + (dailyStats[yesterday]?.trial || 0)
             },
             last7Days: last7Days,
             total: {
                 registration: typeStats.registration,
                 renewal: typeStats.renewal,
-                total: typeStats.registration + typeStats.renewal
+                trial: typeStats.trial,
+                total: typeStats.registration + typeStats.renewal + typeStats.trial
             },
             recentUsage: usageLog.slice(-20).reverse() // 最近20条记录
         };
     } catch (error) {
         console.error('获取使用情况统计失败:', error.message);
         return {
-            today: { registration: 0, renewal: 0, total: 0 },
-            yesterday: { registration: 0, renewal: 0, total: 0 },
+            today: { registration: 0, renewal: 0, trial: 0, total: 0 },
+            yesterday: { registration: 0, renewal: 0, trial: 0, total: 0 },
             last7Days: [],
-            total: { registration: 0, renewal: 0, total: 0 },
+            total: { registration: 0, renewal: 0, trial: 0, total: 0 },
             recentUsage: []
         };
     }
@@ -193,6 +202,15 @@ export function getRenewalCodes() {
 }
 
 /**
+ * 获取体验邀请码列表
+ * @returns {string[]} 体验邀请码数组
+ */
+export function getTrialCodes() {
+    const config = readInvitationCodes();
+    return config.trialCodes || [];
+}
+
+/**
  * 验证注册邀请码
  * @param {string} code 邀请码
  * @returns {boolean} 是否有效
@@ -209,6 +227,16 @@ export function validateRegistrationCode(code) {
  */
 export function validateRenewalCode(code) {
     const codes = getRenewalCodes();
+    return codes.includes(code);
+}
+
+/**
+ * 验证体验邀请码
+ * @param {string} code 邀请码
+ * @returns {boolean} 是否有效
+ */
+export function validateTrialCode(code) {
+    const codes = getTrialCodes();
     return codes.includes(code);
 }
 
@@ -248,6 +276,26 @@ export function addRenewalCode(code) {
     }
     
     config.renewalCodes.push(code);
+    writeInvitationCodes(config);
+    return true;
+}
+
+/**
+ * 添加体验邀请码
+ * @param {string} code 邀请码
+ * @returns {boolean} 是否添加成功
+ */
+export function addTrialCode(code) {
+    const config = readInvitationCodes();
+    if (!config.trialCodes) {
+        config.trialCodes = [];
+    }
+    
+    if (config.trialCodes.includes(code)) {
+        return false; // 已存在
+    }
+    
+    config.trialCodes.push(code);
     writeInvitationCodes(config);
     return true;
 }
@@ -301,6 +349,33 @@ export function removeRenewalCode(code, userHandle = null, ip = null) {
     // 记录使用情况
     if (userHandle && ip) {
         logCodeUsage(code, 'renewal', userHandle, ip);
+    }
+    
+    return true;
+}
+
+/**
+ * 删除体验邀请码
+ * @param {string} code 邀请码
+ * @returns {boolean} 是否删除成功
+ */
+export function removeTrialCode(code, userHandle = null, ip = null) {
+    const config = readInvitationCodes();
+    if (!config.trialCodes) {
+        return false;
+    }
+    
+    const index = config.trialCodes.indexOf(code);
+    if (index === -1) {
+        return false;
+    }
+    
+    config.trialCodes.splice(index, 1);
+    writeInvitationCodes(config);
+    
+    // 记录使用情况
+    if (userHandle && ip) {
+        logCodeUsage(code, 'trial', userHandle, ip);
     }
     
     return true;

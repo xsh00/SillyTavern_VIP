@@ -21,8 +21,10 @@ import { checkForNewContent, CONTENT_TYPES } from './content-manager.js';
 import { 
     validateRegistrationCode, 
     validateRenewalCode,
+    validateTrialCode,
     removeRegistrationCode,
-    removeRenewalCode
+    removeRenewalCode,
+    removeTrialCode
 } from '../invitation-codes.js';
 import { writeSecret } from './secrets.js';
 
@@ -243,8 +245,11 @@ router.post('/register', async (request, response) => {
         const ip = getIpAddress(request);
         await loginLimiter.consume(ip);
 
-        // 验证邀请码
-        if (!validateRegistrationCode(request.body.invitationCode)) {
+        // 验证邀请码（支持注册码和体验码）
+        const isRegistrationCode = validateRegistrationCode(request.body.invitationCode);
+        const isTrialCode = validateTrialCode(request.body.invitationCode);
+        
+        if (!isRegistrationCode && !isTrialCode) {
             console.warn('Register failed: Invalid invitation code');
             return response.status(403).json({ error: 'Invalid invitation code' });
         }
@@ -264,8 +269,18 @@ router.post('/register', async (request, response) => {
 
         const salt = getPasswordSalt();
         const password = getPasswordHash(request.body.password, salt);
-        const defaultSubscriptionDuration = getConfigValue('defaultSubscriptionDuration', 2592000000, 'number');
-        const subscriptionExpires = Date.now() + defaultSubscriptionDuration;
+        
+        // 根据邀请码类型设置订阅时长
+        let subscriptionDuration;
+        if (isTrialCode) {
+            // 体验码：1天
+            subscriptionDuration = 24 * 60 * 60 * 1000; // 1天的毫秒数
+        } else {
+            // 注册码：默认30天
+            subscriptionDuration = getConfigValue('defaultSubscriptionDuration', 2592000000, 'number');
+        }
+        
+        const subscriptionExpires = Date.now() + subscriptionDuration;
 
         const newUser = {
             handle: handle,
@@ -281,7 +296,11 @@ router.post('/register', async (request, response) => {
         await storage.setItem(toKey(handle), newUser);
 
         // 注册成功后移除已用的邀请码，并记录使用情况
-        removeRegistrationCode(request.body.invitationCode, newUser.handle, ip);
+        if (isRegistrationCode) {
+            removeRegistrationCode(request.body.invitationCode, newUser.handle, ip);
+        } else if (isTrialCode) {
+            removeTrialCode(request.body.invitationCode, newUser.handle, ip);
+        }
 
         // 创建用户目录
         console.info('Creating data directories for', newUser.handle);

@@ -1,7 +1,7 @@
 // 邀请码管理系统 JavaScript
 
 let currentCodeType = '';
-let invitationCodes = { registrationCodes: [], renewalCodes: [] };
+let invitationCodes = { registrationCodes: [], renewalCodes: [], trialCodes: [] };
 let usageStatistics = {};
 
 // 初始化
@@ -32,6 +32,9 @@ function initializeTabs() {
                 loadOverviewData();
             } else if (tabId === 'usage') {
                 loadUsageData();
+            } else if (tabId === 'trial') {
+                // 确保体验码数据已加载
+                renderTrialCodes();
             }
         });
     });
@@ -99,14 +102,15 @@ async function loadUsageData() {
 function updateOverviewStats() {
     document.getElementById('regCodesCount').textContent = invitationCodes.registrationCodes.length;
     document.getElementById('renewCodesCount').textContent = invitationCodes.renewalCodes.length;
+    document.getElementById('trialCodesCount').textContent = invitationCodes.trialCodes?.length || 0;
     document.getElementById('todayUsage').textContent = usageStatistics.today?.total || 0;
-    document.getElementById('totalUsage').textContent = usageStatistics.total?.total || 0;
 }
 
 // 渲染邀请码列表
 function renderCodesList() {
     renderRegistrationCodes();
     renderRenewalCodes();
+    renderTrialCodes();
 }
 
 // 渲染注册码列表
@@ -126,7 +130,10 @@ function renderRegistrationCodes() {
 
     container.innerHTML = codes.map(code => `
         <div class="code-item">
-            <span class="code-text">${code}</span>
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <input type="checkbox" class="code-checkbox" data-type="registration" data-code="${code}" onchange="updateBatchCopyButton('registration')">
+                <span class="code-text">${code}</span>
+            </div>
             <div class="code-actions">
                 <button class="btn btn-sm" onclick="copyToClipboard('${code}')" 
                         style="background: #38a169; color: white;">
@@ -157,7 +164,10 @@ function renderRenewalCodes() {
 
     container.innerHTML = codes.map(code => `
         <div class="code-item">
-            <span class="code-text">${code}</span>
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <input type="checkbox" class="code-checkbox" data-type="renewal" data-code="${code}" onchange="updateBatchCopyButton('renewal')">
+                <span class="code-text">${code}</span>
+            </div>
             <div class="code-actions">
                 <button class="btn btn-sm" onclick="copyToClipboard('${code}')" 
                         style="background: #38a169; color: white;">
@@ -171,14 +181,50 @@ function renderRenewalCodes() {
     `).join('');
 }
 
+// 渲染体验码列表
+function renderTrialCodes() {
+    const container = document.getElementById('trialCodesList');
+    const codes = invitationCodes.trialCodes || [];
+
+    if (codes.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <h3>🎯 暂无体验邀请码</h3>
+                <p>点击上方按钮添加新的体验邀请码</p>
+            </div>
+        `;
+        return;
+    }
+
+    container.innerHTML = codes.map(code => `
+        <div class="code-item">
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <input type="checkbox" class="code-checkbox" data-type="trial" data-code="${code}" onchange="updateBatchCopyButton('trial')">
+                <span class="code-text">${code}</span>
+            </div>
+            <div class="code-actions">
+                <button class="btn btn-sm" onclick="copyToClipboard('${code}')" 
+                        style="background: #38a169; color: white;">
+                    📋 复制
+                </button>
+                <button class="btn btn-danger btn-sm" onclick="deleteCode('trial', '${code}')">
+                    🗑️ 删除
+                </button>
+            </div>
+        </div>
+    `).join('');
+}
+
 // 渲染使用统计
 function renderUsageStatistics() {
     if (!usageStatistics.today) return;
 
     document.getElementById('todayReg').textContent = usageStatistics.today.registration || 0;
     document.getElementById('todayRenew').textContent = usageStatistics.today.renewal || 0;
+    document.getElementById('todayTrial').textContent = usageStatistics.today.trial || 0;
     document.getElementById('yesterdayReg').textContent = usageStatistics.yesterday?.registration || 0;
     document.getElementById('yesterdayRenew').textContent = usageStatistics.yesterday?.renewal || 0;
+    document.getElementById('yesterdayTrial').textContent = usageStatistics.yesterday?.trial || 0;
 
     // 渲染使用记录表格
     const tbody = document.getElementById('usageTableBody');
@@ -195,19 +241,32 @@ function renderUsageStatistics() {
         return;
     }
 
-    tbody.innerHTML = records.map(record => `
-        <tr>
-            <td><code>${record.code}</code></td>
-            <td>
-                <span class="badge ${record.type === 'registration' ? 'badge-registration' : 'badge-renewal'}">
-                    ${record.type === 'registration' ? '注册' : '续费'}
-                </span>
-            </td>
-            <td>${record.userHandle}</td>
-            <td>${record.ip}</td>
-            <td>${new Date(record.timestamp).toLocaleString('zh-CN')}</td>
-        </tr>
-    `).join('');
+    tbody.innerHTML = records.map(record => {
+        let badgeClass = 'badge-registration';
+        let badgeText = '注册';
+        
+        if (record.type === 'renewal') {
+            badgeClass = 'badge-renewal';
+            badgeText = '续费';
+        } else if (record.type === 'trial') {
+            badgeClass = 'badge-trial';
+            badgeText = '体验';
+        }
+        
+        return `
+            <tr>
+                <td><code>${record.code}</code></td>
+                <td>
+                    <span class="badge ${badgeClass}">
+                        ${badgeText}
+                    </span>
+                </td>
+                <td>${record.userHandle}</td>
+                <td>${record.ip}</td>
+                <td>${new Date(record.timestamp).toLocaleString('zh-CN')}</td>
+            </tr>
+        `;
+    }).join('');
 }
 
 // 渲染使用趋势图表
@@ -290,11 +349,22 @@ function showAddCodeModal(type) {
     const modal = document.getElementById('addCodeModal');
     const title = document.getElementById('modalTitle');
     
-    title.textContent = type === 'registration' ? '添加注册邀请码' : '添加续费邀请码';
+    if (type === 'registration') {
+        title.textContent = '添加注册邀请码';
+    } else if (type === 'renewal') {
+        title.textContent = '添加续费邀请码';
+    } else if (type === 'trial') {
+        title.textContent = '添加体验邀请码';
+    }
     
     // 清空输入框
     document.getElementById('newCodeInput').value = '';
-    document.getElementById('prefixInput').value = type === 'registration' ? 'REGISTER' : 'RENEW';
+    const prefixMap = {
+        'registration': 'REGISTER',
+        'renewal': 'RENEW',
+        'trial': 'TRIAL'
+    };
+    document.getElementById('prefixInput').value = prefixMap[type] || 'CODE';
     
     modal.classList.add('show');
 }
@@ -373,7 +443,12 @@ async function generateCode(type, prefix) {
 
 // 批量生成邀请码
 async function batchGenerate(type) {
-    const countInput = document.getElementById(type === 'registration' ? 'regBatchCount' : 'renewBatchCount');
+    const inputMap = {
+        'registration': 'regBatchCount',
+        'renewal': 'renewBatchCount',
+        'trial': 'trialBatchCount'
+    };
+    const countInput = document.getElementById(inputMap[type]);
     const count = parseInt(countInput.value);
     
     if (!count || count < 1 || count > 50) {
@@ -383,7 +458,12 @@ async function batchGenerate(type) {
 
     try {
         showLoading();
-        const prefix = type === 'registration' ? 'REGISTER' : 'RENEW';
+        const prefixMap = {
+            'registration': 'REGISTER',
+            'renewal': 'RENEW',
+            'trial': 'TRIAL'
+        };
+        const prefix = prefixMap[type];
         const promises = [];
         
         for (let i = 0; i < count; i++) {
@@ -554,4 +634,78 @@ document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') {
         hideAddCodeModal();
     }
-}); 
+});
+
+// 全选/反选功能
+function toggleSelectAll(type) {
+    const selectAllCheckbox = document.getElementById(`${type}SelectAll`);
+    const checkboxes = document.querySelectorAll(`.code-checkbox[data-type="${type}"]`);
+    
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = selectAllCheckbox.checked;
+    });
+    
+    updateBatchCopyButton(type);
+}
+
+// 更新批量复制按钮状态
+function updateBatchCopyButton(type) {
+    const checkboxes = document.querySelectorAll(`.code-checkbox[data-type="${type}"]:checked`);
+    const batchCopyBtn = document.getElementById(`${type}BatchCopyBtn`);
+    const selectAllCheckbox = document.getElementById(`${type}SelectAll`);
+    
+    if (checkboxes.length > 0) {
+        batchCopyBtn.style.display = 'inline-flex';
+        batchCopyBtn.textContent = `📋 批量复制选中 (${checkboxes.length})`;
+    } else {
+        batchCopyBtn.style.display = 'none';
+    }
+    
+    // 更新全选复选框状态
+    const allCheckboxes = document.querySelectorAll(`.code-checkbox[data-type="${type}"]`);
+    if (allCheckboxes.length > 0) {
+        selectAllCheckbox.checked = checkboxes.length === allCheckboxes.length;
+        selectAllCheckbox.indeterminate = checkboxes.length > 0 && checkboxes.length < allCheckboxes.length;
+    }
+}
+
+// 批量复制选中的邀请码
+async function batchCopySelected(type) {
+    const checkboxes = document.querySelectorAll(`.code-checkbox[data-type="${type}"]:checked`);
+    
+    if (checkboxes.length === 0) {
+        showAlert('请先选择要复制的邀请码', 'error');
+        return;
+    }
+    
+    const selectedCodes = Array.from(checkboxes).map(cb => cb.dataset.code);
+    const codesText = selectedCodes.join('\n');
+    
+    try {
+        await navigator.clipboard.writeText(codesText);
+        showAlert(`已复制 ${selectedCodes.length} 个邀请码到剪贴板`, 'success');
+        
+        // 取消选中
+        checkboxes.forEach(cb => cb.checked = false);
+        document.getElementById(`${type}SelectAll`).checked = false;
+        updateBatchCopyButton(type);
+    } catch (error) {
+        // 降级方案
+        const textArea = document.createElement('textarea');
+        textArea.value = codesText;
+        document.body.appendChild(textArea);
+        textArea.select();
+        try {
+            document.execCommand('copy');
+            showAlert(`已复制 ${selectedCodes.length} 个邀请码到剪贴板`, 'success');
+            
+            // 取消选中
+            checkboxes.forEach(cb => cb.checked = false);
+            document.getElementById(`${type}SelectAll`).checked = false;
+            updateBatchCopyButton(type);
+        } catch (err) {
+            showAlert('复制失败，请手动复制', 'error');
+        }
+        document.body.removeChild(textArea);
+    }
+} 

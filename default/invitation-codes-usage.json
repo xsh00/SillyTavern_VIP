@@ -6,5 +6,13 @@
     "ip": "127.0.0.1",
     "timestamp": 1751188175001,
     "date": "2025-06-29"
+  },
+  {
+    "code": "TRIAL-MCFMXH1A-DEMO01",
+    "type": "trial",
+    "userHandle": "test-111",
+    "ip": "127.0.0.1",
+    "timestamp": 1751373154821,
+    "date": "2025-07-01"
   }
 ]

@@ -347,6 +347,11 @@
             color: white;
         }
 
+        .badge-trial {
+            background: #f56500;
+            color: white;
+        }
+
         .alert {
             padding: 15px;
             border-radius: 8px;
@@ -397,6 +402,24 @@
             color: #495057;
         }
 
+        .batch-controls {
+            padding: 10px 0;
+            border-top: 1px solid #e2e8f0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .batch-controls label {
+            color: #495057;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .code-checkbox {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+
         @media (max-width: 768px) {
             .header h1 {
                 font-size: 2rem;
@@ -444,6 +467,7 @@
             <button class="nav-tab active" data-tab="overview">📊 概览</button>
             <button class="nav-tab" data-tab="registration">📝 注册码</button>
             <button class="nav-tab" data-tab="renewal">🔄 续费码</button>
+            <button class="nav-tab" data-tab="trial">🎯 体验码</button>
             <button class="nav-tab" data-tab="usage">📈 使用情况</button>
         </div>
 
@@ -460,14 +484,14 @@
                     <div class="label">可用续费码数量</div>
                 </div>
                 <div class="stat-card">
+                    <h3>体验码余量</h3>
+                    <div class="number" id="trialCodesCount">-</div>
+                    <div class="label">可用体验码数量</div>
+                </div>
+                <div class="stat-card">
                     <h3>今日使用</h3>
                     <div class="number" id="todayUsage">-</div>
                     <div class="label">今日已使用邀请码</div>
-                </div>
-                <div class="stat-card">
-                    <h3>总计使用</h3>
-                    <div class="number" id="totalUsage">-</div>
-                    <div class="label">历史总使用量</div>
                 </div>
             </div>
 
@@ -481,9 +505,14 @@
             <div class="code-section">
                 <div class="section-header">
                     <h2 class="section-title">📝 注册邀请码管理</h2>
-                    <button class="btn btn-primary" onclick="showAddCodeModal('registration')">
-                        ➕ 添加注册码
-                    </button>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn btn-success" onclick="batchCopySelected('registration')" id="regBatchCopyBtn" style="display: none;">
+                            📋 批量复制选中
+                        </button>
+                        <button class="btn btn-primary" onclick="showAddCodeModal('registration')">
+                            ➕ 添加注册码
+                        </button>
+                    </div>
                 </div>
 
                 <div class="form-row">
@@ -496,6 +525,13 @@
                     </button>
                 </div>
 
+                <div class="batch-controls" style="margin-bottom: 15px;">
+                    <label style="display: flex; align-items: center; gap: 8px;">
+                        <input type="checkbox" id="regSelectAll" onchange="toggleSelectAll('registration')">
+                        <span>全选/反选</span>
+                    </label>
+                </div>
+
                 <div id="regCodesList" class="code-list">
                     <!-- 注册码列表将在这里动态生成 -->
                 </div>
@@ -506,9 +542,14 @@
             <div class="code-section">
                 <div class="section-header">
                     <h2 class="section-title">🔄 续费邀请码管理</h2>
-                    <button class="btn btn-primary" onclick="showAddCodeModal('renewal')">
-                        ➕ 添加续费码
-                    </button>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn btn-success" onclick="batchCopySelected('renewal')" id="renewBatchCopyBtn" style="display: none;">
+                            📋 批量复制选中
+                        </button>
+                        <button class="btn btn-primary" onclick="showAddCodeModal('renewal')">
+                            ➕ 添加续费码
+                        </button>
+                    </div>
                 </div>
 
                 <div class="form-row">
@@ -521,8 +562,52 @@
                     </button>
                 </div>
 
+                <div class="batch-controls" style="margin-bottom: 15px;">
+                    <label style="display: flex; align-items: center; gap: 8px;">
+                        <input type="checkbox" id="renewSelectAll" onchange="toggleSelectAll('renewal')">
+                        <span>全选/反选</span>
+                    </label>
+                </div>
+
                 <div id="renewCodesList" class="code-list">
                     <!-- 续费码列表将在这里动态生成 -->
+                </div>
+            </div>
+        </div>
+
+        <div id="trial" class="tab-content">
+            <div class="code-section">
+                <div class="section-header">
+                    <h2 class="section-title">🎯 体验邀请码管理</h2>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn btn-success" onclick="batchCopySelected('trial')" id="trialBatchCopyBtn" style="display: none;">
+                            📋 批量复制选中
+                        </button>
+                        <button class="btn btn-primary" onclick="showAddCodeModal('trial')">
+                            ➕ 添加体验码
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">批量生成体验码</label>
+                        <input type="number" class="form-input" id="trialBatchCount" placeholder="输入生成数量" min="1" max="50" value="1">
+                    </div>
+                    <button class="btn btn-success" onclick="batchGenerate('trial')">
+                        🎲 批量生成
+                    </button>
+                </div>
+
+                <div class="batch-controls" style="margin-bottom: 15px;">
+                    <label style="display: flex; align-items: center; gap: 8px;">
+                        <input type="checkbox" id="trialSelectAll" onchange="toggleSelectAll('trial')">
+                        <span>全选/反选</span>
+                    </label>
+                </div>
+
+                <div id="trialCodesList" class="code-list">
+                    <!-- 体验码列表将在这里动态生成 -->
                 </div>
             </div>
         </div>
@@ -548,6 +633,11 @@
                         <div class="label">今日续费码使用</div>
                     </div>
                     <div class="stat-card">
+                        <h3>今日体验</h3>
+                        <div class="number" id="todayTrial">-</div>
+                        <div class="label">今日体验码使用</div>
+                    </div>
+                    <div class="stat-card">
                         <h3>昨日注册</h3>
                         <div class="number" id="yesterdayReg">-</div>
                         <div class="label">昨日注册码使用</div>
@@ -556,6 +646,11 @@
                         <h3>昨日续费</h3>
                         <div class="number" id="yesterdayRenew">-</div>
                         <div class="label">昨日续费码使用</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>昨日体验</h3>
+                        <div class="number" id="yesterdayTrial">-</div>
+                        <div class="label">昨日体验码使用</div>
                     </div>
                 </div>
 

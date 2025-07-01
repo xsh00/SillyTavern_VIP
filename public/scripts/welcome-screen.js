@@ -108,13 +108,14 @@ async function sendAssistantMessage() {
 
 ---
 
+<!-- 暂时隐藏教程部分
 <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; border-left: 4px solid #28a745;">
 <h3 style="color: #28a745; margin-top: 0;">📚 酒馆使用教程</h3>
 
 <p style="font-size: 16px; line-height: 1.6;">
 <strong style="color: #dc3545;">📖 使用教程（必看）：</strong><br>
-<a href="https://docs.qq.com/doc/DTFVCdXV6UHBSWk1O" target="_blank" style="color: #007bff; text-decoration: none; font-weight: bold;">
-🔗 https://docs.qq.com/doc/DTFVCdXV6UHBSWk1O
+<a href="" target="_blank" style="color: #007bff; text-decoration: none; font-weight: bold;">
+🔗 
 </a>
 </p>
 
@@ -126,9 +127,11 @@ async function sendAssistantMessage() {
 <strong style="color: #17a2b8;">🛠️ 客服联系VX：</strong><span style="color: #28a745; font-weight: bold;">jiuguan3678</span>
 </p>
 </div>
+-->
 
 ---
 
+<!-- 暂时隐藏购买链接部分
 <div style="background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); padding: 20px; border-radius: 8px; margin: 15px 0;">
 <h3 style="color: #d63384; text-align: center; margin-top: 0;">💎 精品API次数卡</h3>
 
@@ -154,6 +157,7 @@ Grok-3 | Gemini 2.5 Pro 等高级模型
 </a>
 </div>
 </div>
+-->
 
 <div style="background: #e3f2fd; padding: 15px; border-radius: 8px; border: 1px solid #bbdefb; margin-top: 20px;">
 <p style="color: #1565c0; font-size: 14px; text-align: center; margin: 0;">

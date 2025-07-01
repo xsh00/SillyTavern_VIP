@@ -25,7 +25,11 @@ import {
     removeRegistrationCode,
     removeRenewalCode,
     generateInvitationCode,
-    getUsageStatistics
+    getUsageStatistics,
+    getTrialCodes,
+    addTrialCode,
+    removeTrialCode,
+    validateTrialCode
 } from '../invitation-codes.js';
 
 export const router = express.Router();
@@ -272,10 +276,12 @@ router.get('/invitation-codes', requireAdminMiddleware, async (request, response
     try {
         const registrationCodes = getRegistrationCodes();
         const renewalCodes = getRenewalCodes();
+        const trialCodes = getTrialCodes();
         
         return response.json({
             registrationCodes: registrationCodes,
-            renewalCodes: renewalCodes
+            renewalCodes: renewalCodes,
+            trialCodes: trialCodes
         });
     } catch (error) {
         console.error('Get invitation codes failed:', error);
@@ -361,14 +367,53 @@ router.delete('/invitation-codes/renewal/:code', requireAdminMiddleware, async (
     }
 });
 
+// 添加体验邀请码
+router.post('/invitation-codes/trial', requireAdminMiddleware, async (request, response) => {
+    try {
+        if (!request.body.code) {
+            console.warn('Add trial code failed: Missing code');
+            return response.status(400).json({ error: 'Missing code' });
+        }
+
+        const success = addTrialCode(request.body.code);
+        if (success) {
+            console.info('Trial code added:', request.body.code);
+            return response.json({ success: true, code: request.body.code });
+        } else {
+            return response.status(409).json({ error: 'Code already exists' });
+        }
+    } catch (error) {
+        console.error('Add trial code failed:', error);
+        return response.sendStatus(500);
+    }
+});
+
+// 删除体验邀请码
+router.delete('/invitation-codes/trial/:code', requireAdminMiddleware, async (request, response) => {
+    try {
+        const code = request.params.code;
+        const success = removeTrialCode(code);
+        
+        if (success) {
+            console.info('Trial code removed:', code);
+            return response.json({ success: true, code: code });
+        } else {
+            return response.status(404).json({ error: 'Code not found' });
+        }
+    } catch (error) {
+        console.error('Remove trial code failed:', error);
+        return response.sendStatus(500);
+    }
+});
+
 // 生成随机邀请码
 router.post('/invitation-codes/generate', requireAdminMiddleware, async (request, response) => {
     try {
-        const type = request.body.type; // 'registration' 或 'renewal'
+        const type = request.body.type; // 'registration' 或 'renewal' 或 'trial'
         const prefix = request.body.prefix || 'CODE';
         
-        if (!type || (type !== 'registration' && type !== 'renewal')) {
-            return response.status(400).json({ error: 'Invalid type. Must be "registration" or "renewal"' });
+        if (!type || !['registration', 'renewal', 'trial'].includes(type)) {
+            return response.status(400).json({ error: 'Invalid type. Must be "registration", "renewal", or "trial"' });
         }
 
         const code = generateInvitationCode(prefix);
@@ -377,8 +422,10 @@ router.post('/invitation-codes/generate', requireAdminMiddleware, async (request
         let success = false;
         if (type === 'registration') {
             success = addRegistrationCode(code);
-        } else {
+        } else if (type === 'renewal') {
             success = addRenewalCode(code);
+        } else if (type === 'trial') {
+            success = addTrialCode(code);
         }
 
         if (success) {
