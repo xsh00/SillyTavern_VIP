@@ -108,6 +108,18 @@ async function sendAssistantMessage() {
 
 ---
 
+<div style="background: #fff3cd; padding: 15px; border-radius: 8px; border: 1px solid #ffeaa7; margin: 15px 0;">
+<h4 style="color: #856404; margin-top: 0;">📢 重要提醒</h4>
+<p style="color: #856404; margin: 8px 0;">
+<strong>🔔 注意：</strong>部分带有涩涩插图/动画效果的角色卡可能需要开启美国地区VPN才能正确加载显示
+</p>
+<p style="color: #856404; margin: 8px 0;">
+<strong>💎 获取更多角色卡/订阅额度：</strong> +VX： <span style="color: #dc3545; font-weight: bold;">AIGC8838</span>
+</p>
+</div>
+
+---
+
 <!-- 暂时隐藏教程部分
 <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; border-left: 4px solid #28a745;">
 <h3 style="color: #28a745; margin-top: 0;">📚 酒馆使用教程</h3>

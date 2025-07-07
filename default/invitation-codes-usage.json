@@ -14,5 +14,85 @@
     "ip": "127.0.0.1",
     "timestamp": 1751373154821,
     "date": "2025-07-01"
+  },
+  {
+    "code": "REGISTER-MCFMX7OR-HNP6JB",
+    "type": "registration",
+    "userHandle": "13423869276",
+    "ip": "127.0.0.1",
+    "timestamp": 1751439382247,
+    "date": "2025-07-02"
+  },
+  {
+    "code": "REGISTER-MCHAXB25-08EYAI",
+    "type": "registration",
+    "userHandle": "zxc-12345",
+    "ip": "127.0.0.1",
+    "timestamp": 1751439955572,
+    "date": "2025-07-02"
+  },
+  {
+    "code": "REGISTER-MCHAXADF-YJR92F",
+    "type": "registration",
+    "userHandle": "万子豪",
+    "ip": "127.0.0.1",
+    "timestamp": 1751440016835,
+    "date": "2025-07-02"
+  },
+  {
+    "code": "REGISTER-MCHAX8AZ-OQOFOU",
+    "type": "registration",
+    "userHandle": "清",
+    "ip": "127.0.0.1",
+    "timestamp": 1751440028852,
+    "date": "2025-07-02"
+  },
+  {
+    "code": "REGISTER-MCHAXAPQ-03MFSQ",
+    "type": "registration",
+    "userHandle": "admin",
+    "ip": "127.0.0.1",
+    "timestamp": 1751450675146,
+    "date": "2025-07-02"
+  },
+  {
+    "code": "REGISTER-MCHAX9C8-ZY88HW",
+    "type": "registration",
+    "userHandle": "zq",
+    "ip": "127.0.0.1",
+    "timestamp": 1751450799725,
+    "date": "2025-07-02"
+  },
+  {
+    "code": "REGISTER-MCHAX8NG-1NXLY0",
+    "type": "registration",
+    "userHandle": "7777777",
+    "ip": "127.0.0.1",
+    "timestamp": 1751451029125,
+    "date": "2025-07-02"
+  },
+  {
+    "code": "REGISTER-MCHAX9OK-O454CK",
+    "type": "registration",
+    "userHandle": "花生酱大王",
+    "ip": "127.0.0.1",
+    "timestamp": 1751458961323,
+    "date": "2025-07-02"
+  },
+  {
+    "code": "TRIAL-MCKII98V-80JZO9",
+    "type": "trial",
+    "userHandle": "test-1",
+    "ip": "127.0.0.1",
+    "timestamp": 1751787909836,
+    "date": "2025-07-06"
+  },
+  {
+    "code": "TRIAL-MCKII93I-GSWMZZ",
+    "type": "trial",
+    "userHandle": "3737-aa",
+    "ip": "127.0.0.1",
+    "timestamp": 1751816644443,
+    "date": "2025-07-06"
   }
 ]

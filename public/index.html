@@ -43,7 +43,6 @@
     <link rel="stylesheet" type="text/css" href="css/select2-overrides.css">
     <link rel="stylesheet" type="text/css" href="css/mobile-styles.css">
     <link rel="stylesheet" type="text/css" href="css/user.css">
-    <link rel="stylesheet" type="text/css" href="css/character-simplify.css">
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <!-- Scripts are loaded at the end of the body to improve page load speed -->
 </head>
@@ -65,45 +64,8 @@
     <div id="top-bar">
     </div>
     <div id="top-settings-holder">
-        <!-- 新的设置按钮 -->
-        <div id="main-settings-button" class="drawer">
-            <div class="drawer-toggle drawer-header">
-                <div id="mainSettingsIcon" class="drawer-icon fa-solid fa-cog fa-fw closedIcon" title="设置" data-i18n="[title]设置"></div>
-            </div>
-            <div id="main-settings-dropdown" class="dropdown-menu" style="display: none;">
-                <div class="dropdown-item" data-target="ai-config-button">
-                    <i class="fa-solid fa-sliders"></i>
-                    <span data-i18n="AI Response Configuration">AI响应配置</span>
-                </div>
-                <div class="dropdown-item" data-target="sys-settings-button">
-                    <i class="fa-solid fa-plug-circle-exclamation"></i>
-                    <span data-i18n="API Connections">API连接</span>
-                </div>
-                <div class="dropdown-item" data-target="advanced-formatting-button">
-                    <i class="fa-solid fa-font"></i>
-                    <span data-i18n="AI响应格式化">AI响应格式化</span>
-                </div>
-                <div class="dropdown-item" data-target="WI-SP-button">
-                    <i class="fa-solid fa-book-atlas"></i>
-                    <span data-i18n="World Info">世界信息</span>
-                </div>
-                <div class="dropdown-item" data-target="user-settings-button">
-                    <i class="fa-solid fa-user-cog"></i>
-                    <span data-i18n="User Settings">用户设置</span>
-                </div>
-                <div class="dropdown-item" data-target="extensions-settings-button">
-                    <i class="fa-solid fa-cubes"></i>
-                    <span data-i18n="Extensions">扩展功能</span>
-                </div>
-                <div class="dropdown-item" data-target="persona-management-button">
-                    <i class="fa-solid fa-face-smile"></i>
-                    <span data-i18n="Persona Management">角色管理</span>
-                </div>
-            </div>
-        </div>
-
         <!-- background selection menu -->
-        <div id="ai-config-button" class="drawer" style="display: none;">
+        <div id="ai-config-button" class="drawer">
             <div class="drawer-toggle drawer-header">
                 <div id="leftNavDrawerIcon" class="drawer-icon fa-solid fa-sliders fa-fw closedIcon" title="AI Response Configuration" data-i18n="[title]AI Response Configuration"></div>
             </div>
@@ -2204,7 +2166,7 @@
                 </div>
             </div>
         </div>
-        <div id="sys-settings-button" class="drawer" style="display: none;">
+        <div id="sys-settings-button" class="drawer">
             <div class="drawer-toggle drawer-header">
                 <div id="API-status-top" class="drawer-icon fa-solid fa-plug-circle-exclamation fa-fw closedIcon" title="API Connections" data-i18n="[title]API Connections;[no_connection_text]api_no_connection" no_connection_text="No connection..."></div>
             </div>
@@ -3627,7 +3589,7 @@
                 </div>
             </div>
         </div>
-        <div id="advanced-formatting-button" class="drawer" style="display: none;">
+        <div id="advanced-formatting-button" class="drawer">
             <div class="drawer-toggle">
                 <div class="drawer-icon fa-solid fa-font fa-fw closedIcon" title="AI Response Formatting" data-i18n="[title]AI Response Formatting"></div>
             </div>
@@ -4156,7 +4118,7 @@
                 </div>
             </div>
         </div>
-        <div id="WI-SP-button" class="drawer" style="display: none;">
+        <div id="WI-SP-button" class="drawer">
             <div class="drawer-toggle drawer-header">
                 <div id="WIDrawerIcon" class="drawer-icon fa-solid fa-book-atlas fa-fw closedIcon " title="World Info" data-i18n="[title]World Info"></div>
             </div>
@@ -4361,7 +4323,7 @@
                 </div>
             </div>
         </div>
-        <div id="user-settings-button" class="drawer" style="display: none;">
+        <div id="user-settings-button" class="drawer">
             <div class="drawer-toggle">
                 <div class="drawer-icon fa-solid fa-user-cog fa-fw closedIcon" title="User Settings" data-i18n="[title]User Settings"></div>
             </div>
@@ -5125,7 +5087,7 @@
                 </div>
             </div>
         </div>
-        <div id="extensions-settings-button" class="drawer" style="display: none;">
+        <div id="extensions-settings-button" class="drawer">
             <div class="drawer-toggle">
                 <div class="drawer-icon fa-solid fa-cubes fa-fw closedIcon" title="Extensions" data-i18n="[title]Extensions"></div>
             </div>
@@ -5207,7 +5169,7 @@
                 </div>
             </div>
         </div>
-        <div id="persona-management-button" class="drawer" style="display: none;">
+        <div id="persona-management-button" class="drawer">
             <div class="drawer-toggle">
                 <div class="drawer-icon fa-solid fa-face-smile fa-fw closedIcon" title="Persona Management" data-i18n="[title]Persona Management"></div>
             </div>
@@ -7404,8 +7366,7 @@
     <script type="module" src="lib/swiped-events.js"></script>
     <script type="module" src="lib/eventemitter.js"></script>
     <script type="module" src="scripts/i18n.js"></script>
-<script src="scripts/character-simplify.js"></script>
-<script type="module" src="script.js"></script>
+    <script type="module" src="script.js"></script>
     <script>
         window.addEventListener('load', (event) => {
             const documentHeight = () => {
