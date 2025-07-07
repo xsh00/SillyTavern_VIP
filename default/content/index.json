@@ -211,7 +211,170 @@
         "filename": "高岭之花的女儿背地里是个变态恋父控.png",
         "type": "character"
     },
-
+    {
+        "filename": "《无所不能神圣不可侵的姐姐，成了别人后宫的肉便器侍女长也笑着说爱我》.png",
+        "type": "character"
+    },
+    {
+        "filename": "《致炽焰以战歌》——露帕.png",
+        "type": "character"
+    },
+    {
+        "filename": "GANTZ模拟器，快来给黑球打工，去征服外星大姐姐吧.png",
+        "type": "character"
+    },
+    {
+        "filename": "Monster乐队卡.png",
+        "type": "character"
+    },
+    {
+        "filename": "r18女性向坏狗烂人手机聊天多类型开场白.png",
+        "type": "character"
+    },
+    {
+        "filename": "为你性癖定制生成的世界.png",
+        "type": "character"
+    },
+    {
+        "filename": "交配APP.png",
+        "type": "character"
+    },
+    {
+        "filename": "仙子母猪检疫站.png",
+        "type": "character"
+    },
+    {
+        "filename": "几年前被你单删拉黑的网恋对象现在成了游戏区大主包 -陆觉明.png",
+        "type": "character"
+    },
+    {
+        "filename": "医生-骨科-撕绿茶-修罗场-美化.png",
+        "type": "character"
+    },
+    {
+        "filename": "古风女尊大世界.png",
+        "type": "character"
+    },
+    {
+        "filename": "吕布.png",
+        "type": "character"
+    },
+    {
+        "filename": "喜爱COSPLAY的年轻后妈.png",
+        "type": "character"
+    },
+    {
+        "filename": "大宠妃驾到！统统闪开！.png",
+        "type": "character"
+    },
+    {
+        "filename": "孕仙春楼.png",
+        "type": "character"
+    },
+    {
+        "filename": "巴比伦大酒店.png",
+        "type": "character"
+    },
+    {
+        "filename": "带着女儿返乡.png",
+        "type": "character"
+    },
+    {
+        "filename": "性爱侍奉房间.png",
+        "type": "character"
+    },
+    {
+        "filename": "性癖大世界-万用手枪卡.png",
+        "type": "character"
+    },
+    {
+        "filename": "性癖大世界.png",
+        "type": "character"
+    },
+    {
+        "filename": "恨比爱长久，出道在即你被曾经霸凌欺辱过的小透明威胁做他的🐶.png",
+        "type": "character"
+    },
+    {
+        "filename": "成为幸运观众，抽到知更鸟.png",
+        "type": "character"
+    },
+    {
+        "filename": "星辰为冢.png",
+        "type": "character"
+    },
+    {
+        "filename": "校园-傲娇-猫系-双性可选-gb-bl主攻.png",
+        "type": "character"
+    },
+    {
+        "filename": "温照聿👩‍❤️‍💋‍👨私生子哥哥&独生女妹宝.png",
+        "type": "character"
+    },
+    {
+        "filename": "爱媚粉的新晋爱豆实际上是变态痴汉狂2.0版本.png",
+        "type": "character"
+    },
+    {
+        "filename": "男团选秀综艺招募中.png",
+        "type": "character"
+    },
+    {
+        "filename": "目睹斯卡蒂被臭肥恶男狠狠NTR走的地狱.png",
+        "type": "character"
+    },
+    {
+        "filename": "神里绫华绝对不会抛弃旅行者然后被我征服.png",
+        "type": "character"
+    },
+    {
+        "filename": "聖修道女の堕ちた洞窟です.png",
+        "type": "character"
+    },
+    {
+        "filename": "肛交允许法案.png",
+        "type": "character"
+    },
+    {
+        "filename": "英国人妻弟媳.png",
+        "type": "character"
+    },
+    {
+        "filename": "莉莉艾和露莎米奈（给未亡人和单亲孩子一个家）.png",
+        "type": "character"
+    },
+    {
+        "filename": "超恶劣の异世界v3.png",
+        "type": "character"
+    },
+    {
+        "filename": "长离.png",
+        "type": "character"
+    },
+    {
+        "filename": "魔法少女-花与蛇的咏叹调v0.31希望的大手.png",
+        "type": "character"
+    },
+    {
+        "filename": "拉拉-玛秋-塞拉-杜还有大家都是能成为我母亲的女性.png",
+        "type": "character"
+    },
+    {
+        "filename": "捅死你捅死你-《梦衍月》.png",
+        "type": "character"
+    },
+    {
+        "filename": "捡到离家出走的怀孕千金.png",
+        "type": "character"
+    },
+    {
+        "filename": "打飞机猝死穿越到色情后宫世界.png",
+        "type": "character"
+    },
+    {
+        "filename": "我的手机意外安装催眠APP.png",
+        "type": "character"
+    },
     {
         "filename": "Eldoria.json",
         "type": "world"
@@ -572,10 +735,10 @@
         "filename": "presets/textgen/simple-proxy-for-tavern.json",
         "type": "textgen_preset"
     },
-        {
-            "filename": "presets/openai/Default.json",
-            "type": "openai_preset"
-        },
+    {
+        "filename": "presets/openai/Default.json",
+        "type": "openai_preset"
+    },
     {
         "filename": "presets/openai/kemini 4.5 flash.json",
         "type": "openai_preset"
