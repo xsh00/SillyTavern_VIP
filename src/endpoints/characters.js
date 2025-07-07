@@ -24,14 +24,21 @@ import { getUserDirectories } from '../users.js';
 import { getChatInfo } from './chats.js';
 const defaultAvatarPath = './public/img/ai4.png';
 
-// With 100 MB limit it would take roughly 3000 characters to reach this limit
-const memoryCacheCapacity = getConfigValue('performance.memoryCacheCapacity', '100mb');
+// 优化的缓存配置 - 适配低内存环境
+const memoryCacheCapacity = getConfigValue('performance.memoryCacheCapacity', '32mb'); // 从 100mb 降至 32mb
 const memoryCache = new MemoryLimitedMap(memoryCacheCapacity);
-// Some Android devices require tighter memory management
+
+// 优化的 Android 检测和内存管理
 const isAndroid = process.platform === 'android';
-// Use shallow character data for the character list
-const useShallowCharacters = !!getConfigValue('performance.lazyLoadCharacters', false, 'boolean');
+const isLowMemory = process.env.NODE_ENV === 'production' && 
+                   (process.memoryUsage().heapTotal < 512 * 1024 * 1024); // 小于 512MB
+
+// 根据环境调整缓存策略
+const useShallowCharacters = !!getConfigValue('performance.lazyLoadCharacters', isLowMemory, 'boolean');
 const useDiskCache = !!getConfigValue('performance.useDiskCache', true, 'boolean');
+
+// 优化的缓存清理间隔
+const CACHE_CLEANUP_INTERVAL = isLowMemory ? 2 * 60 * 1000 : 5 * 60 * 1000; // 2分钟 vs 5分钟
 
 class DiskCache {
     /**
@@ -44,7 +51,7 @@ class DiskCache {
      * @type {number}
      * @readonly
      */
-    static SYNC_INTERVAL = 5 * 60 * 1000;
+    static SYNC_INTERVAL = CACHE_CLEANUP_INTERVAL; // 使用动态间隔
 
     /** @type {import('node-persist').LocalStorage} */
     #instance;

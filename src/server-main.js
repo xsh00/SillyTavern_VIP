@@ -15,6 +15,7 @@ import responseTime from 'response-time';
 import helmet from 'helmet';
 import bodyParser from 'body-parser';
 import open from 'open';
+import crypto from 'crypto';
 
 // local library imports
 import './fetch-patch.js';
@@ -68,6 +69,7 @@ import {
 } from './util.js';
 import { UPLOADS_DIRECTORY } from './constants.js';
 import { ensureThumbnailCache } from './endpoints/thumbnails.js';
+import { getPerformanceConfig, applyPerformanceConfig, getPerformanceMetrics } from './config/performance.js';
 
 // Routers
 import { router as usersPublicRouter } from './endpoints/users-public.js';
@@ -102,10 +104,32 @@ try {
 }
 
 const app = express();
+
+// 获取性能配置并应用
+const performanceConfig = getPerformanceConfig();
+console.log(`System detected: ${performanceConfig.system.category} (${performanceConfig.system.totalMemory}MB RAM, ${performanceConfig.system.cpuCount} CPUs)`);
+
 app.use(helmet({
     contentSecurityPolicy: false,
 }));
-app.use(compression());
+
+// 优化的压缩配置
+app.use(compression({
+    level: 6,           // 压缩级别 (1-9，6 是性能和压缩率的平衡点)
+    threshold: 1024,    // 只压缩大于 1KB 的响应
+    filter: (req, res) => {
+        // 不压缩已经压缩的内容
+        if (req.headers['x-no-compression']) {
+            return false;
+        }
+        // 压缩文本内容
+        return compression.filter(req, res);
+    },
+    chunkSize: 16 * 1024,  // 16KB 块大小，适合网络传输
+    windowBits: 15,        // 压缩窗口大小
+    memLevel: 8            // 内存使用级别
+}));
+
 app.use(responseTime());
 
 app.use(bodyParser.json({ limit: '200mb' }));
@@ -142,12 +166,15 @@ if (cliArgs.enableCorsProxy) {
     });
 }
 
+// 优化的会话配置
 app.use(cookieSession({
     name: getCookieSessionName(),
     sameSite: 'lax',
     httpOnly: true,
     maxAge: getSessionCookieAge(),
     secret: getCookieSecret(globalThis.DATA_ROOT),
+    // 性能优化配置
+    secure: cliArgs.ssl           // 仅在 HTTPS 时启用 secure
 }));
 
 app.use(setUserDataMiddleware);
@@ -233,7 +260,29 @@ app.get('/codemanage', requireLoginMiddleware, (request, response) => {
 // Host frontend assets
 const webpackMiddleware = getWebpackServeMiddleware();
 app.use(webpackMiddleware);
-app.use(express.static(path.join(serverDirectory, 'public'), {}));
+
+// 优化的静态资源配置
+app.use(express.static(path.join(serverDirectory, 'public'), {
+    maxAge: '7d',          // 静态资源缓存 7 天
+    etag: true,            // 启用 ETag
+    lastModified: true,    // 启用 Last-Modified
+    immutable: true,       // 标记为不可变资源
+    index: false,          // 禁用目录索引
+    dotfiles: 'ignore',    // 忽略点文件
+    setHeaders: (res, path) => {
+        // 为不同文件类型设置不同的缓存策略
+        if (path.includes('/lib/') || path.includes('/css/') || path.includes('/js/')) {
+            res.setHeader('Cache-Control', 'public, max-age=31536000, immutable'); // 1年
+        } else if (path.includes('/img/') || path.includes('/sounds/')) {
+            res.setHeader('Cache-Control', 'public, max-age=2592000'); // 30天
+        } else {
+            res.setHeader('Cache-Control', 'public, max-age=86400'); // 1天
+        }
+        
+        // 启用 gzip 压缩指示
+        res.setHeader('Vary', 'Accept-Encoding');
+    }
+}));
 
 // Public API
 app.use('/api/users', usersPublicRouter);
